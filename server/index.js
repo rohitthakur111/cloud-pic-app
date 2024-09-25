@@ -14,8 +14,8 @@ app.use(cors({
 }))
 
 app.use('/api/cloud-pic/images', imageRouter)
-app.use('/', (req,res)=>{
-    res.end("Welcome to the cloud pic!")
+app.get('/', (req,res)=>{
+    res.json("Welcome to the cloud pic!")
 })
 
 module.exports = { app };
