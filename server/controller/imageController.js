@@ -28,7 +28,7 @@ exports.getImages = async(req,res)=>{
     }catch(err){
         res.status(500).json({
             status: "fail",
-            error : err
+            error : err.message
         }) 
     }
 }
@@ -53,10 +53,10 @@ exports.uploadImage = async(req,res)=>{
             image : newImage
         }) 
     }catch(err){
-        if(req?.file?.path) deleteImage(req.file.path)
+        // if(req?.file?.path) deleteImage(req.file.path)
         res.status(500).json({
             status: "fail",
-            error : err.message
+            error : err
         }) 
     }
 }
