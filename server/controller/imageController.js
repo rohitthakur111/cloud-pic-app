@@ -36,27 +36,29 @@ exports.getImages = async(req,res)=>{
 // UPLOAD IMAGES IN CLOUD
 exports.uploadImage = async(req,res)=>{
     try{
+        if (!req.file) return res.status(400).json({  status: "fail", error: "No file uploaded"});
+
         const { title, description } = req.body
-        const result = await cloudinary.uploader.upload(req.file.path , {
-            folder:'/cloud/images'
-        });
+        const result = await cloudinary.uploader.upload_stream({ folder: '/cloud/images' }, async (error, result) => {
+            if (error) {
+                return res.status(500).json({ status: "fail", error: error.message });
+            }
 
-        const { public_id } = result;
-        const imageUrl = result?.secure_url;
-        const newImage = new Image({ public_id, title, description, imageUrl })
-        await newImage.save();
+            const { public_id } = result;
+            const imageUrl = result?.secure_url;
+            const newImage = new Image({ public_id, title, description, imageUrl });
+            await newImage.save();
 
-        if(req?.file?.path) deleteImage(req.file.path)
-
-        res.status(201).json({
-            status: "success",
-            image : newImage
-        }) 
+            res.status(201).json({
+                status: "success",
+                image: newImage
+            });
+        }).end(req.file.buffer); 
     }catch(err){
         // if(req?.file?.path) deleteImage(req.file.path)
         res.status(500).json({
             status: "fail",
-            error : err
+            error : err.message
         }) 
     }
 }
