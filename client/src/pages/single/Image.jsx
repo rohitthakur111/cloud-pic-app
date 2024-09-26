@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import ImageCard from "../../components/ImageCard"
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getImage } from "../../feature/service";
 import { GoDownload } from "react-icons/go";
-import Home from "../home/Home";
 import { imageLoading, imagesList, removeImageAsync } from "../../feature/imageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import SingleImage from "../../components/SingleImage";
 import Loading from "../../components/Loading";
+import SingleLoading from "../../components/SIngleLoading";
 
 const Image = ()=>{
     const dispatch = useDispatch()
@@ -19,15 +18,16 @@ const Image = ()=>{
     const navigate = useNavigate()
 
     const [image, setImage] = useState(null);
+    const [error, setError] = useState('');
+
     const {id} =  useParams()
     useEffect(()=>{
-        if(id){
-            (async()=>{
-                const response = await getImage(id)
-                setImage(response?.image)
-            })()
+        if(id && images?.length>0){
+            const image = images.find(image=> image?._id === id)
+            if(!image) setError('! Image not Found')
+            setImage(image)
         }
-    },[id])
+    },[id, images])
 
     const downloadImage = async({imageUrl, title})=>{
         try {
@@ -58,13 +58,17 @@ const Image = ()=>{
     }
     return(
         <>
-        {loadingState && 
+        {loadingState &&  <>
+        <SingleLoading/>
         <div className='flex flex-row flex-wrap gap-8 justify-center md:justify-start'>
             {Array(6)?.fill()?.map((_,i)=><Loading key={i}/>)}
         </div>
+        </>
         }
         
-        {image ?
+        {error && <p className="text-3xl font-medium text-error">{error}</p>}
+
+        {!loadingState && image && !error && 
         <div className="flex flex-col md:flex-row gap-8  my-4 pb-8 border-b ">
             <div className="md:w-1/2 flex flex-col md:flex-row">
                 <SingleImage image={image}/>
@@ -90,9 +94,8 @@ const Image = ()=>{
             </div>
             
         </div>
-        :
-        <p className="text-3xl font-medium text-error">! Image not Found</p>
         }
+        
         <div className="mt-8">
             <div className='flex justify-center md:justify-start flex-wrap gap-8'>
                 {images?.filter((image) => image?._id !== id)

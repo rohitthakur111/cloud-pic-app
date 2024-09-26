@@ -17,5 +17,8 @@ app.use('/api/cloud-pic/images', imageRouter)
 app.get('/', (req,res)=>{
     res.json("Welcome to the cloud pic!")
 })
+app.get('/env', (req,res)=>{
+    res.json(process.env.CLOUDINARY_CLOUD_NAME)
+})
 
 module.exports = { app };
