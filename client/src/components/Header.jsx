@@ -18,7 +18,7 @@ const Header =() =>{
         <div className="flex items-center justify-between md:mx-12 p-4">
           <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="/images/logo.png" className="h-12 md:h-20" alt="Flowbite Logo" />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Cloud Pic</span>
+            <span className="self-center text-xl md:text-2xl font-semibold whitespace-nowrap dark:text-white">Cloud Pic</span>
           </Link>
           <Link to="upload-image" className="btn btn-error text-white text-uppercase"> <IoMdAdd /> Upload Image</Link>
         </div>
