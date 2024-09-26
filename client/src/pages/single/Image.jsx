@@ -8,7 +8,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import SingleImage from "../../components/SingleImage";
 import Loading from "../../components/Loading";
-import SingleLoading from "../../components/SIngleLoading";
+import SingleLoading from "../../components/SingleLoading";
 
 const Image = ()=>{
     const dispatch = useDispatch()
@@ -58,7 +58,7 @@ const Image = ()=>{
     }
     return(
         <>
-        {loadingState &&  <>
+        {!loadingState &&  <>
         <SingleLoading/>
         <div className='flex flex-row flex-wrap gap-8 justify-center md:justify-start'>
             {Array(6)?.fill()?.map((_,i)=><Loading key={i}/>)}
