@@ -8,7 +8,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import SingleImage from "../../components/SingleImage";
 import Loading from "../../components/Loading";
-import SingleLoading from "../../components/SIngleLoading";
+import SingleLoading from "../../components/SingleLoading";
 
 const Image = ()=>{
     const dispatch = useDispatch()
