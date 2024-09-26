@@ -8,8 +8,8 @@ import { Toaster } from "react-hot-toast"
 const Header =() =>{
   const dispatch = useDispatch()
   useEffect(()=>{
-     (async()=>{
-      console.log(await dispatch(getImagesAsync()))
+    (async()=>{
+      await dispatch(getImagesAsync())
     })()
   },[])
   return (
