@@ -1,7 +1,7 @@
 import axios from "axios"; 
 
 const Api  = axios.create({
-  baseURL : 'http://localhost:8080/api/cloud-pic',
+  baseURL : 'cloud-pic-app-api.vercel.app/api/cloud-pic',
   headers: {
     ContentType: "application/json",
   }, 
