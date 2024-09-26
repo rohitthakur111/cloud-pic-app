@@ -9,7 +9,7 @@ const Header =() =>{
   const dispatch = useDispatch()
   useEffect(()=>{
      (async()=>{
-      await dispatch(getImagesAsync())
+      console.log(await dispatch(getImagesAsync()))
     })()
   },[])
   return (

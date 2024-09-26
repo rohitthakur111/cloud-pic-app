@@ -8,15 +8,12 @@ const app = express()
 
 app.use(express.json())
 app.use(cors({
-    origin : 'https://cloud-pic-rohitthakur111s-projects.vercel.app',
+    origin : 'http://localhost:5173',
     methods : "GET,POST,DELETE,PUT,PATCH",
     credentials : true
 }))
 
-<<<<<<< HEAD
 app.use('/api/cloud-pic/images', imageRouter)
-=======
->>>>>>> 834b1c8a6a2dd63776337f9139d42b341be36eca
 app.get('/', (req,res)=>{
     res.json("Welcome to the cloud pic!")
 })

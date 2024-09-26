@@ -18,7 +18,6 @@ const Image = ()=>{
     const navigate = useNavigate()
 
     const [image, setImage] = useState(null);
-<<<<<<< HEAD
     const [error, setError] = useState('');
 
     const {id} =  useParams()
@@ -27,26 +26,6 @@ const Image = ()=>{
             const image = images.find(image=> image?._id === id)
             if(!image) setError('! Image not Found')
             setImage(image)
-=======
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
-    
-    const {id} =  useParams()
-    useEffect(()=>{
-        setLoading(true)
-        if(id){
-            (async()=>{
-                const response = await getImage(id)
-                if(response?.image){
-                    setError(false)
-                    setLoading(false)
-                    setImage(response?.image)
-                }else{
-                     setError(true)
-                     setLoading(false)
-                }
-            })()
->>>>>>> 834b1c8a6a2dd63776337f9139d42b341be36eca
         }
     },[id, images])
 
@@ -79,27 +58,17 @@ const Image = ()=>{
     }
     return(
         <>
-<<<<<<< HEAD
         {loadingState &&  <>
         <SingleLoading/>
-=======
-        {loading && <Loading />}
-        
-        {loadingState && 
->>>>>>> 834b1c8a6a2dd63776337f9139d42b341be36eca
         <div className='flex flex-row flex-wrap gap-8 justify-center md:justify-start'>
             {Array(6)?.fill()?.map((_,i)=><Loading key={i}/>)}
         </div>
         </>
         }
         
-<<<<<<< HEAD
         {error && <p className="text-3xl font-medium text-error">{error}</p>}
 
         {!loadingState && image && !error && 
-=======
-        {image &&
->>>>>>> 834b1c8a6a2dd63776337f9139d42b341be36eca
         <div className="flex flex-col md:flex-row gap-8  my-4 pb-8 border-b ">
             <div className="md:w-1/2 flex flex-col md:flex-row">
                 <SingleImage image={image}/>
@@ -126,10 +95,6 @@ const Image = ()=>{
             
         </div>
         }
-<<<<<<< HEAD
-=======
-        {error && <p className="text-3xl font-medium text-error">! Image not Found</p>}
->>>>>>> 834b1c8a6a2dd63776337f9139d42b341be36eca
         
         <div className="mt-8">
             <div className='flex justify-center md:justify-start flex-wrap gap-8'>
