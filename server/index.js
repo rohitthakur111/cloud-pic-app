@@ -8,7 +8,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cors({
-    origin : 'https://cloud-pic-rohitthakur111s-projects.vercel.app',
+    origin : 'https://cloud-pic-app.vercel.app',
     methods : "GET,POST,DELETE,PUT,PATCH",
     credentials : true
 }))
