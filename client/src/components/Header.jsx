@@ -20,7 +20,7 @@ const Header =() =>{
             <img src="/images/logo.png" className="h-12 md:h-20" alt="Flowbite Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Cloud Pic</span>
           </Link>
-          <Link to="upload-image" className="btn btn-error text-white text-uppercase"> <IoMdAdd /> Upload Image</Link>
+          <Link to="upload-image" className="btn p-2 btn-error text-white text-uppercase"> <IoMdAdd /> Upload Image</Link>
         </div>
     </nav>
 

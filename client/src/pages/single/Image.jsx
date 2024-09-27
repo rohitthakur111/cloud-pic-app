@@ -58,8 +58,8 @@ const Image = ()=>{
     }
     return(
         <>
-        {!loadingState &&  <>
-        <SingleLoading/>
+        {loadingState &&  <>
+        <SingleLoading />
         <div className='flex flex-row flex-wrap gap-8 justify-center md:justify-start'>
             {Array(6)?.fill()?.map((_,i)=><Loading key={i}/>)}
         </div>
@@ -96,13 +96,15 @@ const Image = ()=>{
         </div>
         }
         
-        <div className="mt-8">
+        <div className="mt-8 ">
             <div className='flex justify-center md:justify-start flex-wrap gap-8'>
                 {images?.filter((image) => image?._id !== id)
                     .map(((image,i) => (
-                        <Link to={`/image/${image?._id}`} key={i}>
-                            <ImageCard width={96} height={96} image={image}/>
-                        </Link>
+                        <div className='w-full md:w-1/4'>
+                            <Link to={`/image/${image?._id}`} key={i}>
+                                <ImageCard width={96} height={96} image={image}/>
+                            </Link>
+                        </div>
                     )))
                 }
             </div>
