@@ -16,7 +16,7 @@ const Main = () => {
   return (
     <>
       <Header />
-      <div className="flex justify-center min-h-screen px-4 md:px-32 py-8">
+      <div className="flex justify-center w-full px-4 min-h-screen md:px-24 2xl:px-32 py-8">
       <div className="outlet-container w-full max-w-full">
         <Outlet key={location?.pathname}/>
       </div>

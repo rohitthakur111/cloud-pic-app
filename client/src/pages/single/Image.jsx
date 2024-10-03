@@ -60,8 +60,8 @@ const Image = ()=>{
         <>
         {loadingState &&  <>
         <SingleLoading />
-        <div className='flex flex-row flex-wrap gap-8 justify-center md:justify-start'>
-            {Array(6)?.fill()?.map((_,i)=><Loading key={i}/>)}
+        <div className='flex flex-row flex-wrap gap-y-4 md:gap-y-2 justify-center md:justify-start'>
+            {Array(6)?.fill()?.map((_,i)=><div className='w-full md:w-1/2 lg:w-1/3 2xl:w-1/4'  key={i}> <Loading    /> </div>)}
         </div>
         </>
         }
@@ -69,11 +69,11 @@ const Image = ()=>{
         {error && <p className="text-3xl font-medium text-error">{error}</p>}
 
         {!loadingState && image && !error && 
-        <div className="flex flex-col md:flex-row gap-8  my-4 pb-8 border-b ">
-            <div className="md:w-1/2 flex flex-col md:flex-row">
+        <div className="flex flex-col lg:flex-row gap-8  my-4 pb-8 border-b ">
+            <div className="lg:w-1/2 flex flex-col md:flex-row">
                 <SingleImage image={image}/>
             </div>
-            <div className="md:w-1/2 md:p-4">
+            <div className="lg:w-1/2 md:p-4">
                 <h2 className="text-xl font-semibold mb-4">{image?.title}</h2>
                 <p className="mb-4">{image?.description}</p>
                 <div className="flex">
@@ -97,11 +97,11 @@ const Image = ()=>{
         }
         
         <div className="mt-8 ">
-            <div className='flex justify-center md:justify-start flex-wrap gap-8'>
+            <div className='flex justify-center md:justify-start flex-wrap gap-y-4 md:gap-y-2'>
                 {images?.filter((image) => image?._id !== id)
                     .map(((image,i) => (
-                        <div className='w-full md:w-1/4'>
-                            <Link to={`/image/${image?._id}`} key={i}>
+                        <div className='w-full md:w-1/2 lg:w-1/3 2xl:w-1/4' key={i}>
+                            <Link to={`/image/${image?._id}`}>
                                 <ImageCard width={96} height={96} image={image}/>
                             </Link>
                         </div>

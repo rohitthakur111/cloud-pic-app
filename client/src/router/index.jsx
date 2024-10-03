@@ -4,6 +4,8 @@ import Home from "../pages/home/Home";
 import Main from "../layout/Main";
 import AddImage from "../pages/upload/AddImage";
 import Image from '../pages/single/Image'
+import Login from "../pages/login/Login";
+import Register from "../pages/register/Register.jsx";
 
 const router = createBrowserRouter([
 {
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Home/>,
+    },
+    {
+        path : "/login",
+        element : <Login />
+    },
+    {
+        path : "/register",
+        element : <Register />
     },
     {
         path: "/image/:id",

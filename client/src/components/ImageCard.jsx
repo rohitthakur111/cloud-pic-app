@@ -6,7 +6,7 @@ const ImageCard = ({image}) => {
       <div className={`card card-compact bg-base-100 w-full shadow-xl rounded`}>
         <figure>
           <img
-            className="h-96 max-h-96 w-full rounded"
+            className="h-96 max-h-96 w-full rounded object-cover"
             src={image?.imageUrl} 
             alt="Shoes" />
         </figure>

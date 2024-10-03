@@ -10,12 +10,12 @@ const Home = () => {
 
   const images = useSelector(imagesList)
   return (
-    <div className='flex w-full flex-row flex-wrap gap-y-4 justify-center md:justify-start'>
-      {loadingState ? Array(6)?.fill()?.map((_,i)=><Loading key={i}/>) : 
+    <div className='flex w-full flex-row flex-wrap gap-y-4 md:gap-y-2 justify-center md:justify-start'>
+      {loadingState ? Array(6)?.fill()?.map((_,i)=> <div className='w-full md:w-1/2 lg:w-1/3 2xl:w-1/4'  key={i}> <Loading/> </div>) : 
      
       images?.map((image,i) => (
-        <div className='w-full md:w-1/4'>
-          <Link to={`/image/${image?._id}`} key={i}>
+        <div className='w-full md:w-1/2 lg:w-1/3 2xl:w-1/4' key={i}>
+          <Link to={`/image/${image?._id}`}>
           <ImageCard image={image}/>
           </Link>
         </div>

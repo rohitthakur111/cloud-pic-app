@@ -62,14 +62,14 @@ const AddImage = () => {
   return (
     <form onSubmit={handleSubmit}>
         <div className='flex justify-center p-4'>
-            <div className='flex md:w-3/4 justify-center items-start'>
+            <div className='flex justify-center items-start'>
                 <h3 className='text-2xl md:text-3xl font-medium p-4'>Upload Your Images</h3>
             </div>
         </div>
 
-        <div className='flex f justify-center p-4'>
-            <div className='flex flex-col w-full md:flex-row gap-4 md:gap-20 md:w-3/4 justify-center items-center md:items-start'>
-                <div className={`w-full md:w-1/2 ${!post?.imageUrl && 'border border-dashed'}`}>
+        <div className='w-full flex justify-center mt-4'>
+            <div className='flex flex-col w-full lg:flex-row gap-4 md:gap-20 xl:w-3/4 justify-center items-center md:items-start'>
+                <div className={`w-full xl:w-1/2 ${!post?.imageUrl && 'border border-dashed'}`}>
                     <label htmlFor='add-new-image' className='flex justify-center flex-col items-center hover:cursor-pointer relative'>
                         {post?.imageUrl? <p className='absolute right-1 z-10 top-1 text-gray text-xl text-blue-700'> <FaRegEdit /></p> 
                         :<>
@@ -85,7 +85,7 @@ const AddImage = () => {
                     <input type='file' name="image" className='h-0 w-0 m-0 p-0' id="add-new-image" key={post?.imageUrl} onChange={handleImageChange}/>
                 </div>
 
-                <div className='w-full md:w-1/2'>
+                <div className='w-full xl:w-1/2'>
                     <div className='flex flex-col text-xl gap-1'>
                         <label>Title</label>
                         <input type="text"
