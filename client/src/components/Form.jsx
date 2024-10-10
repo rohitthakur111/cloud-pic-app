@@ -1,18 +1,33 @@
 import React, { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
+import { useDispatch } from 'react-redux'
+import { getUserAsync, loginAsync, registerAsync } from '../feature/auth/authSlice'
+import toast from 'react-hot-toast';
 
 const Form = ({login}) => {
-    const [ userData, setUserData ] = useState({ userName : '', userEmail : '', userPassword : ''})
+    const dispatch = useDispatch()
+    const [ userData, setUserData ] = useState({ userName : '', email : '', password : ''})
     // handle userdata
     const handleUserData = (e)=> setUserData(prevData=>({ ...prevData, [e.target.name] : e.target.value}))
     // handle submit user data
-    const handleFormSubmit = (e)=>{
+    const handleFormSubmit = async(e)=>{
         e.preventDefault();
         if(login){
             delete userData.userName
             console.log('user', userData)
+            const data = await dispatch(loginAsync(userData))
+            if( data?.payload?.status === 'success'){
+                toast.success('Login Successfully')  
+                const user = await dispatch(getUserAsync());
+                console.log(user)
+            }
+            else toast.error('Login with valid credential!')
         }else{
-            console.log('user', userData)
+            const data = await dispatch(registerAsync(userData))
+            if( data?.payload?.status === 'success')
+                toast.success('Account created Successfully')  
+            else toast.error('Enter a valid data!')
+
         }
     }
   return (
@@ -75,8 +90,8 @@ const Form = ({login}) => {
                         type="email" 
                         className="grow" 
                         placeholder="User Email"
-                        name="userEmail" 
-                        value={userData?.userEmail}
+                        name="email" 
+                        value={userData?.email}
                         onChange={handleUserData}
                         autoComplete ="username"
                         required
@@ -99,8 +114,8 @@ const Form = ({login}) => {
                         autoComplete = "current-password"
                         className="grow"  
                         placeholder='Password'
-                        name="userPassword" 
-                        value={userData?.userPassword}
+                        name="password" 
+                        value={userData?.password}
                         onChange={handleUserData}
                         required
                     />
@@ -118,7 +133,7 @@ const Form = ({login}) => {
             <button type="button" className='flex ml-auto mt-2 text-sm font-semibold text-sky-400'>
                 Forgot Password?
             </button>
-            <button className='w-full flex justify-center items-center mt-4 p-3  text-base uppercase font-semibold rounded-md bg-error text-white  transition-colors duration-500 ease-in-out border border-red-200 border-opacity-40 hover:bg-white hover:text-error'>
+            <button className='w-full flex justify-center items-center mt-4 p-3  text-base uppercase font-semibold rounded-md bg-error text-white  transition-colors duration-500 ease-in-out border border-red-200 border-opacity-40 hover:bg-teal-500 '>
                { login ? 'Sign in to your Account' : 'Create Your Account' }
             </button>
         </div>

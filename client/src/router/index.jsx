@@ -6,6 +6,8 @@ import AddImage from "../pages/upload/AddImage";
 import Image from '../pages/single/Image'
 import Login from "../pages/login/Login";
 import Register from "../pages/register/Register.jsx";
+import Profile from "../pages/profile/Profile.jsx";
+import PrivateRoute from "../components/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
 {
@@ -18,15 +20,19 @@ const router = createBrowserRouter([
     },
     {
         path : "/login",
-        element : <Login />
+        element : <PrivateRoute element={<Login /> }> </PrivateRoute>
     },
     {
         path : "/register",
-        element : <Register />
+        element : <PrivateRoute element={<Register /> }> </PrivateRoute>
     },
     {
         path: "/image/:id",
         element: <Image/>,
+    },
+    {
+        path : "/profile",
+        element : <Profile />
     },
     {
         path: "/upload-image",

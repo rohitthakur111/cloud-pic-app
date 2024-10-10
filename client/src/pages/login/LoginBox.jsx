@@ -3,7 +3,7 @@ import RegisterBackground from './../../assets/images/login-31.jpg';
 import LoginBackground from './../../assets/images/login-image.jpg';
 import { Link } from 'react-router-dom';
 import { IoIosArrowRoundForward } from 'react-icons/io';
-const LoginBox = ({login}) => {
+const LoginBox = ({login, handleTransition}) => {
     const data = { 
         imageStyle : {
             backgroundImage: `url(${login ? LoginBackground : RegisterBackground})`,
@@ -25,12 +25,13 @@ const LoginBox = ({login}) => {
                         <h2 className='text-4xl text-center font-semibold'>{data?.secondHeading}</h2>
                     </div>
                     <div className='w-full flex justify-center'>
-                        <Link to={data?.redirectUrl}
+                        <button to={data?.redirectUrl}
                             className='w-1/2 flex justify-center p-2 items-center text-base rounded-md  bg-error  text-white hover:bg-white transition-colors duration-500 ease-in-out hover:text-error hover:bg-white uppercase font-semibold'
+                            onClick={handleTransition}
                             >
                             <span>{data?.buttonText}</span>
                             <span className='text-3xl text-error'><IoIosArrowRoundForward /></span>
-                        </Link>
+                        </button>
                     </div>
                 </div>
                 

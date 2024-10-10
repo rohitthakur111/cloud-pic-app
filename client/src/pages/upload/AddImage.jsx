@@ -3,7 +3,7 @@ import { FaCloudUploadAlt, FaEdit, FaRegEdit } from 'react-icons/fa'
 import ImageCard from '../../components/ImageCard';
 import { FiEdit2 } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-import { addImageAsync, imageLoading } from '../../feature/imageSlice';
+import { addImageAsync, imageLoading } from "../../feature/images/imageSlice";
 import toast from 'react-hot-toast';
 import SingleImage from '../../components/SingleImage';
 

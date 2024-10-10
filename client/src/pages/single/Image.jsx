@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ImageCard from "../../components/ImageCard"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GoDownload } from "react-icons/go";
-import { imageLoading, imagesList, removeImageAsync } from "../../feature/imageSlice";
+import { imageLoading, imagesList, removeImageAsync } from "../../feature/images/imageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";

@@ -1,7 +1,7 @@
 import React from 'react'
 import ImageCard from '../../components/ImageCard'
 import { useSelector } from 'react-redux'
-import { imageLoading, imagesList } from '../../feature/imageSlice'
+import { imageLoading, imagesList } from "../../feature/images/imageSlice"
 import { Link } from 'react-router-dom'
 import Loading from '../../components/Loading'
 
