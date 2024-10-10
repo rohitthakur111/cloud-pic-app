@@ -60,7 +60,7 @@ const Header =() =>{
                 </div>
 
                 {isOpen && (
-                  <div className="absolute bg-teal-400 left-0 mt-2 bg-white shadow-lg rounded-md z-10 w-full text-white font-medium">
+                  <div className="absolute bg-teal-400 left-0 mt-2 shadow-lg rounded-md z-10 w-full text-white font-medium">
                     <ul className="py-2">
                       <Link to="/profile" onClick={()=>setIsOpen(false)}>
                         <li className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400  cursor-pointer">
