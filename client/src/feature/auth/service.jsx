@@ -34,6 +34,16 @@ export const myAccount = async()=>{
     }
 }
 
+// Google Login 
+export const googleLogin = async(token)=>{
+    try{
+        const response =  await Api.post('/auth/google', {token});
+        return response.data
+    }catch(error){
+        throw error
+    }
+}
+
 // Update user 
 export const updateAccount = async(user)=>{
     try{
@@ -49,3 +59,4 @@ export const updateAccount = async(user)=>{
         throw error
     }
 }
+

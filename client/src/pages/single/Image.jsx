@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import SingleImage from "../../components/SingleImage";
 import Loading from "../../components/Loading";
 import SingleLoading from "../../components/SingleLoading";
+import { FaRegHeart } from "react-icons/fa";
 
 const Image = ()=>{
     const dispatch = useDispatch()
@@ -84,10 +85,10 @@ const Image = ()=>{
                         <GoDownload /> Free Download Now
                     </button>
                     <button 
-                        className="btn btn-error text-white text-uppercase ms-2"
-                        onClick={ ()=>handleDeleteImage(image?._id)}
+                        className="bg-gray-100 px-4 text-2xl rounded-md text-error text-uppercase ms-2"
+                        // onClick={ ()=>handleDeleteImage(image?._id)}
                     >
-                        <span className="text-xl"><MdDeleteOutline /></span> Delete
+                        <FaRegHeart />
                     </button>
                 </div>
                 

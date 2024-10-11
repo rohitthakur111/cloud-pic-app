@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { useDispatch } from 'react-redux'
 import { getUserAsync, loginAsync, registerAsync } from '../feature/auth/authSlice'
 import toast from 'react-hot-toast';
+import GoogleLoginBtn from './GoogleLoginBtn';
 
 const Form = ({login}) => {
     const dispatch = useDispatch()
@@ -19,7 +20,6 @@ const Form = ({login}) => {
             if( data?.payload?.status === 'success'){
                 toast.success('Login Successfully')  
                 const user = await dispatch(getUserAsync());
-                console.log(user)
             }
             else toast.error('Login with valid credential!')
         }else{
@@ -126,10 +126,12 @@ const Form = ({login}) => {
                 <span>or</span>
                 <div className='border-t flex-grow'></div>
             </div>
-            <button type="button" className='w-full flex justify-center items-center rounded-md gap-x-2 mt-4 text-md font-medium flex-grow p-3 bg-white transition-colors duration-500 ease-in-out hover:bg-sky-100'>
+            {/* <button type="button" className='w-full flex justify-center items-center rounded-md gap-x-2 mt-4 text-md font-medium flex-grow p-3 bg-white transition-colors duration-500 ease-in-out hover:bg-sky-100'>
                 <span className="text-2xl"><FcGoogle /></span>
                 <span> Sign in with Google </span>
-            </button>
+            </button> */}
+            <GoogleLoginBtn />
+
             <button type="button" className='flex ml-auto mt-2 text-sm font-semibold text-sky-400'>
                 Forgot Password?
             </button>

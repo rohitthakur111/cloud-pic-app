@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { login, myAccount, register, updateAccount } from './service';
+import { googleLogin, login, myAccount, register, updateAccount } from './service';
 
 
 const token = localStorage.getItem('token') || null
@@ -26,6 +26,14 @@ export const getUserAsync = createAsyncThunk(
     'get/me',
     async ()=>{
         const data = await myAccount()
+        return data;
+    }
+)
+// Google login
+export const googleLoginAsync = createAsyncThunk(
+    '/google/login',
+    async(token)=>{
+        const data = await googleLogin(token)
         return data;
     }
 )
@@ -90,7 +98,7 @@ const authSlice = createSlice({
                 state.user = null
             })
 
-        // Get user
+        // Get user googleLoginAsync
             .addCase(getUserAsync.pending, state=>{
                 state.loading = true
             })
@@ -101,6 +109,23 @@ const authSlice = createSlice({
 
             })  
             .addCase(getUserAsync.rejected, state=>{
+                state.loading = false
+                state.error = null
+                state.token = null
+                state.user = null
+            })
+
+        // Google Login 
+            .addCase(googleLoginAsync.pending, state=>{
+                state.loading = true
+            })
+            .addCase(googleLoginAsync.fulfilled, (state, action)=>{
+                state.loading = false
+                state.error = null
+                state.user = action.payload?.data?.user
+                state.token = action.payload?.data?.token
+            })  
+            .addCase(googleLoginAsync.rejected, state=>{
                 state.loading = false
                 state.error = null
                 state.token = null

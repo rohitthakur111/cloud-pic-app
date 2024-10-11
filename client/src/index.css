@@ -12,3 +12,27 @@ body{
 .error{
   color:#ff5861;
 }
+
+.google-login-btn div{
+  border : none !important;
+}
+.google-login-btn {
+  /* Your button styles here */
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  overflow: hidden; /* Ensure inner content is clipped if necessary */
+}
+
+.google-login-btn div {
+  transition: background-color .5s; /* Set transition duration for background color */
+}
+
+.google-login-btn:hover div {
+  --tw-bg-opacity: 1;
+  background-color: rgb(224, 242, 254 / var(--tw-bg-opacity)); /* Change background color on hover */
+}
+.google-login-btn:hover div:hover{
+  --tw-bg-opacity: 1;
+  background-color: transparent !important;
+}

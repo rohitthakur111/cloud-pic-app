@@ -3,6 +3,18 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const secret = "secret"
 const cloudinary = require('cloudinary').v2;
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.CLIENT_ID)
+
+const  generateRandomPassword=(length) =>{
+    const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:',.<>?";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+}
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -105,7 +117,38 @@ exports.getUser = async(req,res)=>{
     })
 }
 
+// Google Login
+exports.googleLogin = async(req,res)=>{
+    try{
+        const { token }  = req.body
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.CLIENT_ID
+        });
+        const { name, email, picture } = ticket.getPayload();  
+        let user = await User.findOne({ email })
+        if(!user){
+            const password = generateRandomPassword(8)
+            const salt = bcrypt.genSaltSync(10); 
+            const hashPassword = bcrypt.hashSync(password, salt);
+            user = await User.create({ userName : name, email, password : hashPassword,  profilePicture : picture})
+        }
+        const loginToken = signToken(user)
+        delete user.password
+        res.status(201).json({
+           status : "success",
+           data : { token : loginToken, user}
+        })
 
+    }catch(err){
+        res.status(500).json({
+            status : "fail",
+            error : err.message
+        })
+    }
+}
+
+// Update user 
 exports.updateMe = async (req,res)=>{
     try{
         const file = req.file;

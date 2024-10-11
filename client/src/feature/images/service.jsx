@@ -11,7 +11,11 @@ export const getImages = async()=>{
 
 export const addImage = async(foramData)=>{
     try{
-        const response =  await Api.post('/images',  foramData );
+        const response =  await Api.post('/images',  foramData, { headers : {
+             "Content-Type": "multipart/form-data"
+            }
+        }
+         );
         return response.data
     }catch(error){
         throw error

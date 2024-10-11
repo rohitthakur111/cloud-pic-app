@@ -39,7 +39,7 @@ const AddImage = () => {
     // handle image change 
     const handleImageChange = (e)=>{
       if(e.target.files[0]){
-        let imageUrl = URL.createObjectURL(event.target.files[0]);
+        let imageUrl = URL.createObjectURL(e.target.files[0]);
         setPost(prevPost=> ({...prevPost, image : e.target.files[0], imageUrl}))
       }
     }
