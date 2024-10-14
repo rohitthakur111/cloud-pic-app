@@ -8,6 +8,7 @@ import Login from "../pages/login/Login";
 import Register from "../pages/register/Register.jsx";
 import Profile from "../pages/profile/Profile.jsx";
 import PrivateRoute from "../components/PrivateRoute.jsx";
+import Whish from "../pages/media/Whish.jsx";
 
 const router = createBrowserRouter([
 {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
     {
         path : "/profile",
         element : <Profile />
+    },
+    {
+        path : '/whish',
+        element : <Whish />
     },
     {
         path: "/upload-image",

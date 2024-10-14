@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
-import { useDispatch } from 'react-redux'
-import { getUserAsync, loginAsync, registerAsync } from '../feature/auth/authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserAsync, loginAsync, loginLoading, registerAsync } from '../feature/auth/authSlice'
 import toast from 'react-hot-toast';
 import GoogleLoginBtn from './GoogleLoginBtn';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const Form = ({login}) => {
+    const userLoading = useSelector(loginLoading)
+
     const dispatch = useDispatch()
     const [ userData, setUserData ] = useState({ userName : '', email : '', password : ''})
     // handle userdata
@@ -135,8 +138,15 @@ const Form = ({login}) => {
             <button type="button" className='flex ml-auto mt-2 text-sm font-semibold text-sky-400'>
                 Forgot Password?
             </button>
-            <button className='w-full flex justify-center items-center mt-4 p-3  text-base uppercase font-semibold rounded-md bg-error text-white  transition-colors duration-500 ease-in-out border border-red-200 border-opacity-40 hover:bg-teal-500 '>
+            <button 
+                className={`w-full flex justify-center items-center mt-4 p-3  text-base uppercase font-semibold rounded-md text-white  transition-colors duration-500 ease-in-out border border-red-200 border-opacity-40  ${userLoading ? 'bg-gray-400' : 'bg-error  hover:bg-teal-500'}`}
+                disabled={userLoading}
+            >
                { login ? 'Sign in to your Account' : 'Create Your Account' }
+               {userLoading && 
+                    <span className='animate-spin font-bold text-base font-medium ms-2'><AiOutlineLoading3Quarters /></span>
+                }
+
             </button>
         </div>
     </form>

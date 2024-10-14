@@ -6,6 +6,7 @@ const NODE_PROD_ENV = true;
 
 const userRouter = require("./routes/authRoutes")
 const imageRouter = require("./routes/imageRoutes")
+const whishRouter = require("./routes/whishRoutes")
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(cors({
 
 // Rotes of api
 app.use('/api/cloud-pic/auth', userRouter)
+app.use('/api/cloud-pic/whish', whishRouter)
 app.use('/api/cloud-pic/images', imageRouter)
 
 

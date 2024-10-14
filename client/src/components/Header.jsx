@@ -9,6 +9,7 @@ import { getImagesAsync } from "../feature/images/imageSlice"
 import { authToken, getUserAsync, loginUser, logout } from "../feature/auth/authSlice"
 import { MdPermMedia } from "react-icons/md"
 import { AiOutlineLogin } from "react-icons/ai"
+import { getWhishASync } from "../feature/whish/whishSlice"
 
 const Header =() =>{
   const dispatch = useDispatch()
@@ -29,11 +30,29 @@ const Header =() =>{
   useEffect(()=>{
     (async()=>{
       await dispatch(getImagesAsync())
-      const user = await dispatch(getUserAsync());
-      if(!user?.payload?.data)
-      dispatch(logout())
     })()
   },[])
+
+  // get logged user 
+  useEffect(()=>{
+    if(loginToken){
+      (async()=>{
+        const user = await dispatch(getUserAsync());
+        if(!user?.payload?.data)
+        dispatch(logout())
+      })()
+    }
+  },[loginToken])
+  
+  // get whish item if user logged in 
+  useEffect(()=>{
+    if(loginToken){
+      (async()=>{
+         await dispatch(getWhishASync())
+      })()
+    }
+  },[loginToken])
+
   return (
     <>
      <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 border-b-2 border-gray-100 sticky top-0 z-50 px-2 md:px-16 bg-white">
@@ -67,12 +86,12 @@ const Header =() =>{
                           <span className="text-lg"><FaUserAlt /></span><span>Profile</span> 
                           </li>
                         </Link>
-                      <li 
+                      <Link to="/whish"
                         className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
                         onClick={()=>setIsOpen(false)}
                       >
                         <span className="text-lg"><MdPermMedia /></span><span>Media</span>
-                      </li>
+                      </Link>
                       <li 
                         className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
                         onClick={()=>{ 

@@ -9,13 +9,13 @@ import toast from "react-hot-toast";
 import SingleImage from "../../components/SingleImage";
 import Loading from "../../components/Loading";
 import SingleLoading from "../../components/SingleLoading";
-import { FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { saveWhishItemAsync, whishItems, whishLoading } from "../../feature/whish/whishSlice";
 
 const Image = ()=>{
     const dispatch = useDispatch()
     const images = useSelector(imagesList)
     const loadingState = useSelector(imageLoading)
-
     const navigate = useNavigate()
 
     const [image, setImage] = useState(null);
@@ -29,6 +29,18 @@ const Image = ()=>{
             setImage(image)
         }
     },[id, images])
+
+    // Whish data
+    const whish = useSelector(whishItems)
+    const whishLoadingState = useSelector(whishLoading)
+    const [isWhishItem, setWhishItem] = useState(false)
+
+    useEffect(()=>{
+       if(image){
+        const index = whish.indexOf(image?._id)
+        setWhishItem(index>=0)
+       }
+    },[image, whish])
 
     const downloadImage = async({imageUrl, title})=>{
         try {
@@ -57,6 +69,8 @@ const Image = ()=>{
             navigate('/')
         }else toast.error('Image is not uploaded!')
     }
+
+    
     return(
         <>
         {loadingState &&  <>
@@ -86,9 +100,16 @@ const Image = ()=>{
                     </button>
                     <button 
                         className="bg-gray-100 px-4 text-2xl rounded-md text-error text-uppercase ms-2"
-                        // onClick={ ()=>handleDeleteImage(image?._id)}
-                    >
+                        onClick={ async()=> await dispatch(saveWhishItemAsync(image?._id))}
+                    > 
+                    <span className={whishLoadingState? 'animate-ping' : ''}>
+                        {isWhishItem ? 
+                        <FaHeart />
+                        :
                         <FaRegHeart />
+                        }
+                    </span>
+                      
                     </button>
                 </div>
                 

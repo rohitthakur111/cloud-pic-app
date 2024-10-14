@@ -7,7 +7,6 @@ import Loading from '../../components/Loading'
 
 const Home = () => {
   const loadingState = useSelector(imageLoading)
-
   const images = useSelector(imagesList)
   return (
     <div className='flex w-full flex-row flex-wrap gap-y-4 md:gap-y-2 justify-center md:justify-start'>
