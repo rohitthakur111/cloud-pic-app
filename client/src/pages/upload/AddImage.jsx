@@ -10,8 +10,8 @@ import SingleImage from '../../components/SingleImage';
 const AddImage = () => {
     const dispatch = useDispatch()
     const loading = useSelector(imageLoading)
-    const [post, setPost] = useState({ title : '', description : '', image : null, imageUrl :''});
-    const [error, setError] = useState({ title : '', description : '', image : '', imageUrl :'' });
+    const [post, setPost] = useState({ title : '', description : '', image : null, imageType :'free', price:'', currency : "", imageUrl :''});
+    const [error, setError] = useState({ title : '', description : '', image : '',price : '', currency : "", imageUrl :'' });
 
     // handle post change 
     const handleChangePostData = (e)=> 
@@ -21,10 +21,15 @@ const AddImage = () => {
     const handleError = ()=>{
         let isError = false;
         let error = {};
-        const { title, description, image } = post;
+        const { title, description, image, imageType, price, currency} = post;
         if(!title) error.title = "image title is required!"
         if(!description) error.description = "image description is required!"
         if(!image) error.image = "Please select image to upload!"
+        if(imageType ==='paid'){
+        if(!price) error.price = "Enter image price!"
+        if(!currency) error.currency = "Please select currency!"
+
+        }
         setError(error);
         if(!title || !description || !image) isError = true
         return isError;
@@ -59,6 +64,10 @@ const AddImage = () => {
             toast.success('Image Upload Successfully')
         }else toast.error('Image is not uploaded!')
     }
+
+    // Change Image Type of 
+    const changeImageType = (type)=>setPost(prevPost=>({...prevPost, imageType : type || 'free'}))
+
   return (
     <form onSubmit={handleSubmit}>
         <div className='flex justify-center p-4'>
@@ -111,6 +120,52 @@ const AddImage = () => {
                         </textarea>
                         {error?.description && <p className='text-base font-medium f-style-i italic error'>{error?.description}</p> }
                     </div>
+                    <div className='flex flex-col gap-1 mt-4'>
+                        <label className='text-xl'>Select Image Type:</label>
+                        <div className='flex gap-4'>
+                        <button 
+                            type="button"
+                            className={`flex gap-4 justify-center items-center py-2 px-7  font-medium rounded-md border   text-white ${post?.imageType === 'free'? 'bg-teal-500' : 'bg-gray-400'}`}
+                            onClick={()=>changeImageType('free')}
+                        >
+                        Free Image
+                        </button>
+                        <button 
+                            type="button"
+                            className={`flex gap-4 justify-center items-center py-2 px-7  font-medium rounded-md border   text-white ${post?.imageType === 'paid'? 'bg-teal-500' : 'bg-gray-400'}`}
+                            onClick={()=>changeImageType('paid')}
+
+                        >
+                            Premium Image
+                        </button>
+                        </div>
+                        
+                    </div>
+                    {post?.imageType === 'paid' && 
+                    <div className='flex flex-col text-xl gap-1 mt-4'>
+                        <label>Image Price:</label>
+                        <input 
+                            type="number" 
+                            placeholder='Price' 
+                            className='input input-bordered w-full'
+                            min={0}
+                            name="price"
+                            value={post?.price}
+                            onChange={handleChangePostData}
+                        />
+                        <label className='mt-4'>Currency Type:</label>
+                        <select 
+                            className="select select-bordered w-full"
+                            name="currency"
+                            value={post?.currency || ''}
+                            onChange={handleChangePostData}
+                        >
+                            <option value="" disabled>Choose Currency Type</option>
+                            <option value="INR">INR</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
+                    }
                     <div className='flex flex-col text-xl gap-1 mt-4'>
                         <button type="submit" className="btn btn-error uppercase text-white" disabled={loading}>
                             Upload Image

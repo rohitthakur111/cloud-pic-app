@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { IoMdAdd } from "react-icons/io"
 import { useDispatch, useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Toaster } from "react-hot-toast"
 import { IoLockOpenOutline } from "react-icons/io5"
 import { FaBars, FaUser, FaUserAlt } from "react-icons/fa"
@@ -10,11 +10,20 @@ import { authToken, getUserAsync, loginUser, logout } from "../feature/auth/auth
 import { MdPermMedia } from "react-icons/md"
 import { AiOutlineLogin } from "react-icons/ai"
 import { getWhishASync } from "../feature/whish/whishSlice"
+import { getOrderAsync } from "../feature/order/orderSlice"
+import Modal from "./Modal"
+import { modalState, setTransition, showHideModal } from "../feature/visual/visualSlice"
 
 const Header =() =>{
+  const { pathname } = useLocation()
+
+  const navigate = useNavigate()
   const dispatch = useDispatch()
+
   const loginToken = useSelector(authToken)
   const user = useSelector(loginUser)
+
+  const isModalOpen = useSelector(modalState)
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -48,10 +57,48 @@ const Header =() =>{
   useEffect(()=>{
     if(loginToken){
       (async()=>{
+        await dispatch(getOrderAsync())
          await dispatch(getWhishASync())
       })()
     }
   },[loginToken])
+
+  // handle Login moadal on login btn
+  const handleLoginModal = ()=>{
+    if(pathname === '/login') 
+      return
+    if(pathname === '/register') { 
+      dispatch(setTransition(true))
+      navigate('/login')
+        setTimeout(()=>{
+            dispatch(setTransition(false))
+        },800)
+      return 
+    }
+    dispatch(showHideModal(true))
+  }
+
+  useEffect(()=> {dispatch(showHideModal(false))},[pathname, loginToken])
+  // hide context meu ** imp
+  // window.addEventListener("contextmenu", e => e.preventDefault());
+  // document.onkeydown = (e) => {
+  //   if (e.key == 123) {
+  //       e.preventDefault();
+  //   }
+  //   if (e.ctrlKey && e.shiftKey && e.key == 'I') {
+  //       e.preventDefault();
+  //   }
+  //   if (e.ctrlKey && e.shiftKey && e.key == 'C') {
+  //       e.preventDefault();
+  //   }
+  //   if (e.ctrlKey && e.shiftKey && e.key == 'J') {
+  //       e.preventDefault();
+  //   }
+  //   if (e.ctrlKey && e.key == 'U') {
+  //       e.preventDefault();
+  //   }
+  // };  
+
 
   return (
     <>
@@ -63,7 +110,12 @@ const Header =() =>{
           </Link>
           <div className="flex justify-end gap-4 items-center w-1/2">
             {!loginToken ?
-            <Link to="/login" className="flex gap-4 justify-center items-center py-2 px-7  font-medium rounded-md border border-teal-300 bg-teal-500 text-white transition-colors duration-500 ease-in-out hover:bg-white hover:text-teal-500 "> <span><FaUser/></span> <span>Login</span></Link>
+            <button 
+              className="flex gap-4 justify-center items-center py-2 px-7  font-medium rounded-md border border-teal-300 bg-teal-500 text-white transition-colors duration-500 ease-in-out hover:bg-white hover:text-teal-500"
+              onClick={()=>handleLoginModal()} 
+              > 
+              <span><FaUser/></span> <span>Login</span>
+            </button>
             :
             <div className="flex items-center gap-2">
 
@@ -90,7 +142,7 @@ const Header =() =>{
                         className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
                         onClick={()=>setIsOpen(false)}
                       >
-                        <span className="text-lg"><MdPermMedia /></span><span>Media</span>
+                        <span className="text-lg"><MdPermMedia /></span><span>Favourites</span>
                       </Link>
                       <li 
                         className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
@@ -116,6 +168,19 @@ const Header =() =>{
           </div>
         </div>
     </nav>
+
+    {isModalOpen && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300">
+          <div 
+              className="absolute inset-0 bg-black opacity-70 transition-opacity duration-300"
+              onClick={()=> dispatch(showHideModal(false))}
+          ></div>
+          <div className="flex bg-slate-100 items-center flex-col rounded-lg shadow-lg p-6 z-10 transition-transform duration-300 scale-100">
+              <Modal/>
+          </div>
+      </div>
+    )}
+
 
     <Toaster
         position="top-center"

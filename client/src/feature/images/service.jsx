@@ -9,10 +9,12 @@ export const getImages = async()=>{
     }
 }
 
-export const addImage = async(foramData)=>{
+export const addImage = async(formData)=>{
     try{
-        const response =  await Api.post('/images',  foramData, { headers : {
-             "Content-Type": "multipart/form-data"
+        const token = localStorage.getItem('token')
+        const response =  await Api.post('/images',  formData, { headers : {
+             "Content-Type": "multipart/form-data",
+             'Authorization' : `Bearer ${token}`
             }
         }
          );

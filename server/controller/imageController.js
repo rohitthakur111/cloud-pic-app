@@ -38,8 +38,17 @@ exports.getImages = async(req,res)=>{
 exports.uploadImage = async(req,res)=>{
     try{
         if (!req.file) return res.status(400).json({  status: "fail", error: "No file uploaded"});
-
-        const { title, description } = req.body
+        const user = req.user;
+        let { title, description,imageType,price,currency } = req.body
+        if(imageType=== 'paid'){
+            if(!price || !currency) return res.status(400).json({
+                status: "fail",
+                error : 'Price and currency is required'
+            }) 
+        }else {
+            price = undefined;
+            currency = undefined;  
+        }
         const result = await cloudinary.uploader.upload_stream({ folder: '/cloud/images' }, async (error, result) => {
             if (error) {
                 return res.status(500).json({ status: "fail", error: error.message });
@@ -47,7 +56,7 @@ exports.uploadImage = async(req,res)=>{
 
             const { public_id } = result;
             const imageUrl = result?.secure_url;
-            const newImage = new Image({ public_id, title, description, imageUrl });
+            const newImage = new Image({user : user?._id, public_id, title, description, imageUrl, price, currency,imageType });
             await newImage.save();
 
             res.status(201).json({

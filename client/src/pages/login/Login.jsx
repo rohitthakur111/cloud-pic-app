@@ -31,7 +31,7 @@ const Login = () => {
               <div className='flex flex-col'>
                   <h2 className='flex text-2xl font-semibold'>
                       <span className='text-3xl'><SiWelcometothejungle /></span>
-                      <span>Welcome Back</span>
+                      <span>elcome Back</span>
                   </h2>
                   <p className='mt-2 font-medium text-base'>Don’t have an account? 
                     <button onClick={handleTransition}> <span className='text-sky-500'> Sign Up</span></button> 
