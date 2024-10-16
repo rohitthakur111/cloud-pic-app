@@ -2,6 +2,8 @@ const Image = require('./../models/imageSchema')
 const Order = require('./../models/orderSchema')
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
+let success_url = process.env.SUCCESS_URL
+let cancel_url = process.env.CANCEL_URL
 
 // Create Order 
 exports.makePayment = async(req,res)=>{
@@ -28,8 +30,8 @@ exports.makePayment = async(req,res)=>{
                     },
                     quantity: 1,
                 }],
-                success_url: `http://localhost:5173/image/${id}?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `http://localhost:5173/`, 
+                success_url: `${success_url}/${id}?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${cancel_url}/${id}`, 
             });
     
             res.json({ id: session.id, url: session.url });
