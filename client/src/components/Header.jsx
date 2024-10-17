@@ -131,21 +131,21 @@ const Header =() =>{
                 </div>
 
                 {isOpen && (
-                  <div className="absolute bg-teal-400 left-0 mt-2 shadow-lg rounded-md z-10 w-full text-white font-medium">
+                  <div className="absolute bg-teal-400 left-0 mt-2 shadow-lg rounded-md z-10 w-full text-white font-medium w-auto">
                     <ul className="py-2">
                       <Link to="/profile" onClick={()=>setIsOpen(false)}>
-                        <li className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400  cursor-pointer">
+                        <li className="flex  items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400  cursor-pointer">
                           <span className="text-lg"><FaUserAlt /></span><span>Profile</span> 
                           </li>
                         </Link>
                       <Link to="/whish"
-                        className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
+                        className="flex  items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
                         onClick={()=>setIsOpen(false)}
                       >
                         <span className="text-lg"><MdPermMedia /></span><span>Favourites</span>
                       </Link>
                       <li 
-                        className="flex justify-center items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
+                        className="flex  items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
                         onClick={()=>{ 
                           setIsOpen(false)
                           dispatch(logout())

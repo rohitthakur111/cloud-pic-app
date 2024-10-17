@@ -9,7 +9,7 @@ import SingleImage from "../../components/SingleImage";
 import Loading from "../../components/Loading";
 import SingleLoading from "../../components/SingleLoading";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { saveWhishItemAsync, whishItems, whishLoading } from "../../feature/whish/whishSlice";
+import { saveWhishItemAsync, whishItems } from "../../feature/whish/whishSlice";
 import { getImage } from "../../feature/images/service";
 import { confirmCheckout, getPremium } from "../../feature/order/service";
 import { TbPremiumRights } from "react-icons/tb";
@@ -52,14 +52,14 @@ const Image = ()=>{
                 const { image } = await getImage(id)
                 if(!image) setError('! Image not Found')
                 setImage(image)
+                setLoading(false)
             })()
-            setLoading(false)
         }
 
     },[id])
     // Whish data
     const whish = useSelector(whishItems)
-    const whishLoadingState = useSelector(whishLoading)
+    const [whishLoading, setWhishLoading] = useState(false)
     const [isWhishItem, setWhishItem] = useState(false)
 
     useEffect(()=>{
@@ -209,10 +209,15 @@ const Image = ()=>{
                                 dispatch(showHideModal(true))
                                 return ;
                             }
-                            await dispatch(saveWhishItemAsync(image?._id))
+                            try{
+                                setWhishLoading(true)
+                                await dispatch(saveWhishItemAsync(image?._id))
+                                 setWhishLoading(false)
+                            }catch(err){ setWhishLoading(false) }
+                            
                         }}
                     > 
-                    <span className={whishLoadingState? 'animate-ping' : ''}>
+                    <span className={whishLoading? 'animate-ping' : ''}>
                         {isWhishItem ? 
                         <FaHeart />
                         :

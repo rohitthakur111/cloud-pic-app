@@ -35,12 +35,5 @@ app.get('/env', (req,res)=>{
     res.json(process.env.CLOUDINARY_CLOUD_NAME)
 })
 
-app.get('/success', (req,res)=>{
-    res.json(process.env.SUCCESS_URL)
-})
-
-app.get('/cancel', (req,res)=>{
-    res.json(process.env.CANCEL_URL)
-})
-
 module.exports = { app };
+ 
