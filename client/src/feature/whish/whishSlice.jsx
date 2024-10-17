@@ -42,6 +42,8 @@ const whishSlice = createSlice({
             })
             .addCase(getWhishASync.rejected, state=>{
                 state.loading = false
+                state.list = []
+                state.error = 'Failed to get Whish Item'
             })
 
             // Save Whish list Item 

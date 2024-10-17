@@ -123,7 +123,7 @@ const Image = ()=>{
             if(image)setIsOrder(true)
             else setIsOrder(false)
        }
-    },[order,image])
+    },[order,image,loginToken])
 
     // handle download premium image 
     const handleDownloadPremium = async()=> {

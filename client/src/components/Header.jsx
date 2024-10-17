@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { IoMdAdd } from "react-icons/io"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useLocation, useNavigate } from "react-router-dom"
@@ -7,18 +7,22 @@ import { IoLockOpenOutline } from "react-icons/io5"
 import { FaBars, FaUser, FaUserAlt } from "react-icons/fa"
 import { getImagesAsync } from "../feature/images/imageSlice"
 import { authToken, getUserAsync, loginUser, logout } from "../feature/auth/authSlice"
-import { MdPermMedia } from "react-icons/md"
+import { MdFavorite, MdPermMedia } from "react-icons/md"
 import { AiOutlineLogin } from "react-icons/ai"
 import { getWhishASync } from "../feature/whish/whishSlice"
 import { getOrderAsync } from "../feature/order/orderSlice"
 import Modal from "./Modal"
 import { modalState, setTransition, showHideModal } from "../feature/visual/visualSlice"
+import { TbBrandAppgallery } from "react-icons/tb"
 
 const Header =() =>{
   const { pathname } = useLocation()
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const dropDownRef = useRef(null)
+  const dropDownRefBtn = useRef(null)
 
   const loginToken = useSelector(authToken)
   const user = useSelector(loginUser)
@@ -55,12 +59,10 @@ const Header =() =>{
   
   // get whish item if user logged in 
   useEffect(()=>{
-    if(loginToken){
       (async()=>{
         await dispatch(getOrderAsync())
          await dispatch(getWhishASync())
       })()
-    }
   },[loginToken])
 
   // handle Login moadal on login btn
@@ -79,6 +81,19 @@ const Header =() =>{
   }
 
   useEffect(()=> {dispatch(showHideModal(false))},[pathname, loginToken])
+
+  // Handle drop down 
+  const handleClickOutside = (event)=>{
+    if (
+      (dropDownRefBtn.current && !dropDownRefBtn.current.contains(event.target)) &&
+      (dropDownRef.current && !dropDownRef.current.contains(event.target))
+    ) {
+      console.log('click outside');
+      setIsOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
   // hide context meu ** imp
   window.addEventListener("contextmenu", e => e.preventDefault());
   document.onkeydown = (e) => {
@@ -120,7 +135,7 @@ const Header =() =>{
             <div className="flex items-center gap-2">
 
               <div className="relative w-28 md:w-32">
-                <div className="avatar placeholder" role="button" onClick={toggleDropdown}>
+                <div className="avatar placeholder" role="button" onClick={toggleDropdown} ref={dropDownRefBtn}>
                   <div className="w-12 rounded-full bg-teal-500 text-white">
                     {user?.profilePicture ? (
                       <img src={user.profilePicture} alt="User Avatar" />
@@ -131,26 +146,33 @@ const Header =() =>{
                 </div>
 
                 {isOpen && (
-                  <div className="absolute bg-teal-400 left-0 mt-2 shadow-lg rounded-md z-10 w-full text-white font-medium w-auto">
+                  <div className="absolute bg-teal-400 left-0 mt-2 shadow-lg rounded-md z-10 text-white font-medium w-auto" ref={dropDownRef}>
                     <ul className="py-2">
                       <Link to="/profile" onClick={()=>setIsOpen(false)}>
                         <li className="flex  items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400  cursor-pointer">
                           <span className="text-lg"><FaUserAlt /></span><span>Profile</span> 
-                          </li>
-                        </Link>
+                        </li>
+                      </Link>
                       <Link to="/whish"
                         className="flex  items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
                         onClick={()=>setIsOpen(false)}
                       >
-                        <span className="text-lg"><MdPermMedia /></span><span>Favourites</span>
+                        <span className="text-lg"><MdFavorite /></span><span>Favourites</span>
                       </Link>
+
+                      <Link to="/premium"
+                        className="flex items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
+                        onClick={()=>setIsOpen(false)}
+                      >
+                        <span className="text-lg"><TbBrandAppgallery /></span><span>Premium</span>
+                      </Link>
+
                       <li 
                         className="flex  items-center gap-2 pr-12 pl-4 py-2 hover:bg-red-400 cursor-pointer"
                         onClick={()=>{ 
                           setIsOpen(false)
                           dispatch(logout())
                         }}
-                        
                       >
                         <span className="text-lg"><AiOutlineLogin /></span><span>Logout</span>
                       </li>

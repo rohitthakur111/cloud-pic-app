@@ -37,6 +37,7 @@ const orderSlice = createSlice({
             .addCase(getOrderAsync.rejected, state=>{
                 state.loading = false;
                 state.error = 'Failed to get order!';
+                state.list = []
             }) 
 
             // Crete order 

@@ -9,6 +9,7 @@ import Register from "../pages/register/Register.jsx";
 import Profile from "../pages/profile/Profile.jsx";
 import PrivateRoute from "../components/PrivateRoute.jsx";
 import Whish from "../pages/media/Whish.jsx";
+import Premium from "../pages/premium/Premium.jsx";
 
 const router = createBrowserRouter([
 {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
     {
         path : '/whish',
         element : <Whish />
+    },
+    {
+        path : '/premium',
+        element : <Premium />
     },
     {
         path: "/upload-image",
