@@ -24,16 +24,23 @@ app.use('/api/cloud-pic/auth', userRouter)
 app.use('/api/cloud-pic/whish', whishRouter)
 app.use('/api/cloud-pic/images', imageRouter)
 app.use('/api/cloud-pic/checkout', orderRouter)
+app.use('/api/cloud-pic/images', imageRouter)
 
 
 app.get('/', (req,res)=>{
     res.json("Welcome to the cloud pic!")
 })
+
 app.get('/env', (req,res)=>{
     res.json(process.env.CLOUDINARY_CLOUD_NAME)
 })
 
-app.use('/api/cloud-pic/images', imageRouter)
+app.get('/success', (req,res)=>{
+    res.json(process.env.SUCCESS_URL)
+})
 
+app.get('/cancel', (req,res)=>{
+    res.json(process.env.CANCEL_URL)
+})
 
 module.exports = { app };
