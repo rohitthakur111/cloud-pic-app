@@ -10,6 +10,11 @@ import Profile from "../pages/profile/Profile.jsx";
 import PrivateRoute from "../components/PrivateRoute.jsx";
 import Whish from "../pages/media/Whish.jsx";
 import Premium from "../pages/premium/Premium.jsx";
+import AdminLayout from "../layout/AdminLayout.jsx";
+import NotFound from "../pages/NotFound.jsx";
+import  Dashboard  from "../admin/pages/dashboard";
+import  Images  from "../admin/pages/images";
+import  UserList  from "../admin/pages/users";
 
 const router = createBrowserRouter([
 {
@@ -47,9 +52,38 @@ const router = createBrowserRouter([
     {
         path: "/upload-image",
         element: <AddImage/>,
+    },
+    {
+        path : '*',
+        element : <NotFound />
     }
     ]
 },
+{
+    path : 'Admin',
+    element: <AdminLayout />,
+    children : [
+        {
+            index : true,
+            element : <Dashboard />
+        },
+        {
+            path : 'images',
+            element : <Images />
+        },
+        {
+            path : 'users',
+            element : <UserList />
+        },
+        {
+            path: "add-new",
+            element: <AddImage/>,
+        },
+    ]
+
+    
+},
+
 ]);
 
 export default router

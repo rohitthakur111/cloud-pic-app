@@ -5,11 +5,15 @@ import Footer from "./components/Footer"
 const  App=() =>{
   return (
     <>
-    <Header />
-    <Outlet />
+    <Header/>
+      <Outlet/>
     <Footer />
   </>
   )
 }
 
 export default App
+
+export function FilterImages() {
+  return <Outlet />;
+}

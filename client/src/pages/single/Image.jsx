@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ImageCard from "../../components/ImageCard"
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { GoDownload } from "react-icons/go";
 import { imageLoading, imagesList, removeImageAsync } from "../../feature/images/imageSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -140,6 +140,14 @@ const Image = ()=>{
         }
         
     }
+    const keyword  = useOutletContext();
+    const [filterImages, setFilterImages] = useState([]);
+    useEffect(()=>{
+      if(!images) return
+      if(!keyword) return setFilterImages(images)
+        setFilterImages(images?.filter(image=> image.title.toLowerCase().includes(keyword.toLowerCase()) || image.description.toLowerCase().includes(keyword.toLowerCase())))
+    },[images,keyword])
+
     return(
         <>
         {loadingState || loading &&  <>
@@ -229,13 +237,12 @@ const Image = ()=>{
                 </div>
                 
             </div>
-            
         </div>
         }
         
         <div className="mt-8 ">
             <div className='flex justify-center md:justify-start flex-wrap gap-y-4 md:gap-y-2'>
-                {images?.filter((image) => image?._id !== id)
+                {filterImages?.filter((image) => image?._id !== id)
                     .map(((image,i) => (
                         <div className='w-full md:w-1/2 lg:w-1/3 2xl:w-1/4' key={i}>
                             <Link to={`/image/${image?._id}`}>

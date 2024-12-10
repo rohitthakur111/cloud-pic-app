@@ -6,7 +6,7 @@ import { IoMdClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { showHideModal } from '../feature/visual/visualSlice';
 
-const Modal = () => {
+const Modal = ({flex = true}) => {
     const dispatch = useDispatch()
     return (
         <div className={`relative w-full flex flex-col flex-1 z-10`}>
@@ -29,7 +29,7 @@ const Modal = () => {
                             <span className='text-sky-500'> Sign Up</span>
                         </Link>
                     </p>
-                    <LoginForm login={true} />
+                    <LoginForm login={true} flex/>
                 </div>
             </div>
         </div>

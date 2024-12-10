@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addImageAsync, imageLoading } from "../../feature/images/imageSlice";
 import toast from 'react-hot-toast';
 import SingleImage from '../../components/SingleImage';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 const AddImage = () => {
     const dispatch = useDispatch()
@@ -67,15 +68,22 @@ const AddImage = () => {
 
     // Change Image Type of 
     const changeImageType = (type)=>setPost(prevPost=>({...prevPost, imageType : type || 'free'}))
+    const breadcrumbs = [
+        {
+            title : "Admin",
+            link : "/Admin",
+        },
+        {
+            title : "Add New Image",
+            link : "",
+        }
+    ]
 
   return (
     <form onSubmit={handleSubmit}>
-        <div className='flex justify-center p-4'>
-            <div className='flex justify-center items-start'>
-                <h3 className='text-2xl md:text-3xl font-medium p-4'>Upload Your Images</h3>
-            </div>
+        <div className='flex justify-between items-center position-sticky top-0 border-b bg-sky-50 rounded p-2 text-gray-600'>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         </div>
-
         <div className='w-full flex justify-center mt-4'>
             <div className='flex flex-col w-full lg:flex-row gap-4 md:gap-20 xl:w-3/4 justify-center items-center md:items-start'>
                 <div className={`w-full xl:w-1/2 ${!post?.imageUrl && 'border border-dashed'}`}>

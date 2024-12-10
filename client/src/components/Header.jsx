@@ -15,9 +15,9 @@ import Modal from "./Modal"
 import { modalState, setTransition, showHideModal } from "../feature/visual/visualSlice"
 import { TbBrandAppgallery } from "react-icons/tb"
 
-const Header =() =>{
+const Header =({keyword, setKeyword}) =>{
   const { pathname } = useLocation()
-
+ 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -84,18 +84,17 @@ const Header =() =>{
 
   // Handle drop down 
   const handleClickOutside = (event)=>{
-    if (
+    if (!isOpen &&
       (dropDownRefBtn.current && !dropDownRefBtn.current.contains(event.target)) &&
       (dropDownRef.current && !dropDownRef.current.contains(event.target))
     ) {
-      console.log('click outside');
       setIsOpen(false);
     }
   };
 
   document.addEventListener("mousedown", handleClickOutside);
   // hide context meu ** imp
-  window.addEventListener("contextmenu", e => e.preventDefault());
+  // window.addEventListener("contextmenu", e => e.preventDefault());
   document.onkeydown = (e) => {
     if (e.key == 123) {
         e.preventDefault();
@@ -113,7 +112,10 @@ const Header =() =>{
         e.preventDefault();
     }
   };  
-
+  const [isSearch, setIsSearch] = useState(false)
+  useEffect(()=>{
+    setIsSearch(pathname.toLocaleLowerCase() === '/' || /^\/image\/[^/]+$/.test(pathname))
+  })
 
   return (
     <>
@@ -124,6 +126,19 @@ const Header =() =>{
             <span className="self-center text-xl md:text-2xl font-semibold whitespace-nowrap dark:text-white">Pic Nest</span>
           </Link>
           <div className="flex justify-end gap-4 items-center w-1/2">
+
+            {isSearch &&
+            <div className="form-control">
+              <input 
+                type="text" 
+                placeholder="Search" 
+                className="input input-bordered w-24 md:w-auto"
+                name="keyword"
+                value={keyword}
+                onChange={(e)=>setKeyword(e.target.value)}
+              />
+            </div>
+            }
             {!loginToken ?
             <button 
               className="flex gap-4 justify-center items-center py-2 px-7  font-medium rounded-md border border-teal-300 bg-teal-500 text-white transition-colors duration-500 ease-in-out hover:bg-white hover:text-teal-500"
@@ -182,10 +197,6 @@ const Header =() =>{
               </div>
             </div>
             }
-
-            
-            
-            
             {/* <Link to="upload-image" className="btn py-1 px-5 btn-error text-white text-uppercase"> <IoMdAdd /> Upload Image</Link> */}
           </div>
         </div>
@@ -198,11 +209,10 @@ const Header =() =>{
               onClick={()=> dispatch(showHideModal(false))}
           ></div>
           <div className="flex bg-slate-100 items-center flex-col rounded-lg shadow-lg p-6 z-10 transition-transform duration-300 scale-100">
-              <Modal/>
+              <Modal flex={false}/>
           </div>
       </div>
     )}
-
 
     <Toaster
         position="top-center"
@@ -210,7 +220,6 @@ const Header =() =>{
     />
     </>
    
-    
   )
 }
 

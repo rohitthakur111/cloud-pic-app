@@ -42,3 +42,17 @@ export const getImage = async(id)=>{
         throw error
     }
 }
+
+export const getImageList = async({ type })=>{
+    
+    try{
+        const response =  await Api.get('/images/list',{
+            headers : {
+                type : type ? type : 'all'
+            }
+        }); 
+        return response.data
+    }catch(error){
+        throw error
+    }
+}
