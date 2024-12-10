@@ -127,3 +127,77 @@ exports.getImage = async(req,res)=>{
     }
    
 }
+
+exports.getImagesList = async(req,res)=>{
+    const type = req.headers.type || 'all';
+    let matchStage = {};
+    if (type === 'free') {
+        matchStage = {
+            $or: [
+                { imageType: { $exists: false } }, 
+                { imageType: { $ne: 'paid' } }, 
+            ],
+        };
+    }
+    if (type === 'premium') {
+        matchStage = {
+               imageType : 'paid'
+        }
+    }
+    const pipeline = [
+        {
+            $match: matchStage, 
+        },
+        {
+            $lookup : {
+                from : 'orders',
+                localField : '_id',
+                foreignField : 'image',
+                as : 'order'
+            }
+        },
+        {
+            $addFields : {
+                orderCount : { $size : '$order'}
+            }
+        },
+        {
+            $project : {
+                order : 0
+            }
+        }
+    ]
+    if(type === 'popular'){
+        pipeline.push(
+            {
+                $sort : {
+                    orderCount : -1
+                }, 
+            },
+            {
+                $limit : 10
+            }
+    )
+    }else{
+        pipeline.unshift({
+            $match : matchStage
+        })
+    }
+    pipeline.push({
+        $project: {
+            order: 0, 
+        },
+    })
+    try{
+        const images = await Image.aggregate(pipeline)
+        res.status(200).json({
+            status: "success",
+            images : images
+        }) 
+    }catch(err){
+        res.status(500).json({
+            status: "ok",
+            error : err.message
+        }) 
+    }
+}
