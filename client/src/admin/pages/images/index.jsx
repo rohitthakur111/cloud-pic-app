@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Table from './table'
 import { getImageList } from '../../../feature/images/service'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import { useSearchParams } from 'react-router-dom'
-
+import Table from './Table.jsx'
 const index = () => {
     const options = [
         { title : "All", value : 'all'},

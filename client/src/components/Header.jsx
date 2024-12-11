@@ -94,7 +94,7 @@ const Header =({keyword, setKeyword}) =>{
 
   document.addEventListener("mousedown", handleClickOutside);
   // hide context meu ** imp
-  // window.addEventListener("contextmenu", e => e.preventDefault());
+  window.addEventListener("contextmenu", e => e.preventDefault());
   document.onkeydown = (e) => {
     if (e.key == 123) {
         e.preventDefault();

@@ -3,7 +3,6 @@ import { FiEdit } from 'react-icons/fi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 
 const Table = ({images}) => {
-    console.log(images)
   return (
     <div className='rounded-sm shadow-default '>
         <div className='w-full grid grid-cols-3 rounded-sm bg-gray-50 sm:grid-cols-6 p-4'>
