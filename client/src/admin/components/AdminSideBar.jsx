@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const AdminSideBar = () => {
   return (
     <div className="h-screen w-64 ">
-      <div className="h-screen  w-64 bg-gray-800 text-white p-5 flex flex-col overflow-y-hidden fixed">
+      <div className="h-screen  w-64 bg-gray-800 text-white p-5 flex flex-col overflow-y-hidden fixed z-50">
         <div className="flex items-center space-x-2 mb-10">
           <Link to="/Admin" className="text-2xl font-semibold" >Admin Panel</Link>
         </div>

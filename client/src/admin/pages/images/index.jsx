@@ -3,6 +3,7 @@ import { getImageList } from '../../../feature/images/service'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import { useSearchParams } from 'react-router-dom'
 import Table from './Table.jsx'
+import Paginations from '../../../components/Paginations.jsx'
 const index = () => {
     const options = [
         { title : "All", value : 'all'},
@@ -16,7 +17,7 @@ const index = () => {
     // HANDLE CHAMNGE IMAGE TYPE
     const handleSelect = (e)=>{ 
         setImageType(e.target.value)
-        setSearchParams({type : e.target.value})
+        setSearchParams((prevState)=>({...prevState, type : e.target.value}))
     }
     const [images, setImages] = useState([])
     useEffect(()=>{
@@ -37,6 +38,18 @@ const index = () => {
             link : "",
         }
     ]
+
+    // paginations data
+    const [paginations,setPaginations] = useState({ totalPage : 20, pageSize : 5, currentPage : 3})
+
+    // set current page
+    const setPage = (page)=> {
+        if(page <1 || page > paginations.totalPage || page === paginations.currentPage) return
+        setPaginations(prevState=>({...prevState, currentPage : page}))
+    } 
+    useEffect(()=>{
+        setSearchParams((prevState=>({...prevState, ...paginations})))
+    },[paginations])
   return (
     <div>
         <div className='flex justify-between items-center position-sticky top-0 border-b bg-sky-50 rounded p-2 text-gray-600'>
@@ -56,6 +69,7 @@ const index = () => {
         <div className='mt-4'>
             <Table images={images}/>
         </div>
+        <Paginations paginations={paginations} setPage={setPage}/>
     </div>
   )
 }

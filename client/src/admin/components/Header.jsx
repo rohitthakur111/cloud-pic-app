@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast'
 const Header = () => {
   return (
     <>
-        <div className="navbar bg-base-100 w-full flex justify-end px-32 py-4 border-b">
+        <div className="navbar bg-base-100 w-full flex justify-end px-32 py-4 border-b sticky top-0 z-30">
             <div className="flex-none gap-2">
                 <div className="form-control">
                 </div>
