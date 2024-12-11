@@ -7,7 +7,7 @@ const AdminSideBar = () => {
     <div className="h-screen w-64 ">
       <div className="h-screen  w-64 bg-gray-800 text-white p-5 flex flex-col overflow-y-hidden fixed">
         <div className="flex items-center space-x-2 mb-10">
-          <Link to="/admin" className="text-2xl font-semibold" >Admin Panel</Link>
+          <Link to="/Admin" className="text-2xl font-semibold" >Admin Panel</Link>
         </div>
 
         <nav className="flex flex-col space-y-4 overflow-y-auto hide-scrollbar">

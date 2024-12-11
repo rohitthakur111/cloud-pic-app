@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Home from "../pages/home/Home";
 import Main from "../layout/Main";
-import AddImage from "../pages/upload/AddImage";
 import Image from '../pages/single/Image'
 import Login from "../pages/login/Login";
 import Register from "../pages/register/Register.jsx";
@@ -15,6 +14,7 @@ import NotFound from "../pages/NotFound.jsx";
 import  Dashboard  from "../admin/pages/dashboard";
 import  Images  from "../admin/pages/images";
 import  UserList  from "../admin/pages/users";
+import AddImage from "../admin/pages/newimage";
 
 const router = createBrowserRouter([
 {
@@ -49,10 +49,10 @@ const router = createBrowserRouter([
         path : '/premium',
         element : <Premium />
     },
-    {
-        path: "/upload-image",
-        element: <AddImage/>,
-    },
+    // {
+    //     path: "/upload-image",
+    //     element: <AddImage/>,
+    // },
     {
         path : '*',
         element : <NotFound />
