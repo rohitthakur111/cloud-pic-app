@@ -3,7 +3,7 @@ import { FiEdit } from 'react-icons/fi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 
-const Table = ({images}) => {
+const Table = ({images, paginations}) => {
   return (
     <div className='rounded-sm shadow-default '>
         <div className='w-full grid grid-cols-3 rounded-sm bg-gray-50 sm:grid-cols-6 p-4'>
@@ -17,7 +17,7 @@ const Table = ({images}) => {
         {images.map((image,i)=>(
            <div key={i} className="grid grid-cols-3 border-b border-stroke sm:grid-cols-6 p-4">
             <div className="items-center">
-                <p className="font-medium text-black">{i+1}</p>
+                <p className="font-medium text-black">{((paginations.currentPage-1) * paginations.pageSize)+ i+1}</p>
             </div>
 
             <div className="flex-shrink-0">

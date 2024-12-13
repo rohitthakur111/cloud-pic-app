@@ -135,6 +135,7 @@ const Image = ()=>{
         setDownloading(true)
         try{
             await getPremium(id)
+            setDownloading(false)
         }catch(err){
             setDownloading(false)
         }
@@ -160,7 +161,7 @@ const Image = ()=>{
         
         {error && <p className="text-3xl font-medium text-error">{error}</p>}
 
-        {!loadingState && image && !error && 
+        {!loadingState && !loading && image && !error && 
         <div className="flex flex-col items-start lg:flex-row gap-8  my-4 pb-8 border-b ">
             <div className="lg:w-1/2 flex flex-col md:flex-row">
                 <SingleImage image={image}/>

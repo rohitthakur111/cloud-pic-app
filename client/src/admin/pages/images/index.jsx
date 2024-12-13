@@ -4,27 +4,53 @@ import Breadcrumbs from '../../../components/Breadcrumbs'
 import { useSearchParams } from 'react-router-dom'
 import Table from './Table.jsx'
 import Paginations from '../../../components/Paginations.jsx'
+import PageSize from './PageSize.jsx'   
+ // Type of images
+ const options = [
+    { title : "All", value : 'all'},
+    { title : "Free", value : 'free'},
+    {title : "Premium",value : 'premium'},
+    { title : "Popular",value : 'popular'},
+]
+
 const index = () => {
-    const options = [
-        { title : "All", value : 'all'},
-        { title : "Free", value : 'free'},
-        {title : "Premium",value : 'premium'},
-        { title : "Popular",value : 'popular'},
-    ]
-   const [searchParams, setSearchParams] = useSearchParams();
-    const [imageType, setImageType] = useState(searchParams.get('type') || '')
+   
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // declare initials query param
+    const query  = {
+        type : searchParams.get('type') || 'all',
+        pagesize : searchParams.get('pagesize') || 5,
+        currentpage : searchParams.get('currentpage') || 1,
+    }
+    /** set  initials query param */
+    useEffect(()=>{
+        setSearchParams(query)
+    },[])
+
 
     // HANDLE CHAMNGE IMAGE TYPE
     const handleSelect = (e)=>{ 
-        setImageType(e.target.value)
-        setSearchParams((prevState)=>({...prevState, type : e.target.value}))
+        const newValue = e.target.value;
+        setSearchParams((prevState)=>{
+            const newParams = new URLSearchParams(prevState);
+            newParams.set('type',newValue)
+            return newParams
+        })
     }
+
     const [images, setImages] = useState([])
     useEffect(()=>{
         (async ()=>{
-            const response = await getImageList({ type : imageType})
+            const type = searchParams.get('type')
+            const pageSize = searchParams.get('pagesize')
+            const currentPage = searchParams.get('currentpage')
+            const query = `type=${type}&pagesize=${pageSize}&curentpage=${currentPage}`
+            const response = await getImageList(query)
             if(response.status === "success"){
-                setImages(response.images)
+                const {totalImages, totalPages,images } = response
+                setImages(images)
+                setPaginations(prevState=> ({...prevState, totalImages, totalPages}))
             }
         })()
     },[searchParams])
@@ -40,34 +66,46 @@ const index = () => {
     ]
 
     // paginations data
-    const [paginations,setPaginations] = useState({ totalPage : 20, pageSize : 5, currentPage : 3})
+    const [paginations,setPaginations] = useState({ 
+        totalImages : 5,
+        totalPages : 1,
+        pageSize : Number(searchParams.get('pagesize')) || 5, 
+        currentPage : Number(searchParams.get('currentpage')) || 1
+    })
 
-    // set current page
+    // set current page 
     const setPage = (page)=> {
-        if(page <1 || page > paginations.totalPage || page === paginations.currentPage) return
+        if(page <1 || page > paginations.totalPages || page === paginations.currentPage) return
         setPaginations(prevState=>({...prevState, currentPage : page}))
-    } 
+    }
+    const setPageSize = (pageSize)=> {
+        if(pageSize === paginations.pageSize) return
+        setPaginations(prevState=>({...prevState, pageSize}))
+    }
+
+    // handle params when change param
     useEffect(()=>{
-        setSearchParams((prevState=>({...prevState, ...paginations})))
+        const {currentPage, pageSize } = paginations;
+        setSearchParams((prevState=>{
+            const newParams = new URLSearchParams(prevState)
+            newParams.set('pagesize',pageSize)
+            newParams.set('currentpage',currentPage)
+            return newParams
+        }))
     },[paginations])
   return (
     <div>
-        <div className='flex justify-between items-center position-sticky top-0 border-b bg-sky-50 rounded p-2 text-gray-600'>
+        <div className='flex justify-between items-center border-b bg-sky-50 rounded p-2 text-gray-600'>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <div>
-            <select 
-                className="select w-full max-w-xs  select-bordered" 
-                value={imageType}
-                onChange={handleSelect}
-            >
-                <option value="" disabled defaultValue>Select your images</option>
-                {options.map((option,i)=> <option value={option.value} key={i}>{option.title} </option>)}
-               
-                </select>
-            </div>
+            <PageSize 
+                handleSelect={handleSelect} 
+                searchParams={searchParams} 
+                options={options} 
+                setPageSize={setPageSize}  
+            />
         </div>
         <div className='mt-4'>
-            <Table images={images}/>
+            <Table images={images} paginations={paginations}/>
         </div>
         <Paginations paginations={paginations} setPage={setPage}/>
     </div>
