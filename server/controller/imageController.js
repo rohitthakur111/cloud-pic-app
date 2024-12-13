@@ -1,4 +1,5 @@
 const Image = require('./../models/imageSchema')
+const url = require('url')
         
 const cloudinary = require('cloudinary').v2;
 const fs = require("fs")
@@ -129,70 +130,92 @@ exports.getImage = async(req,res)=>{
 }
 
 exports.getImagesList = async(req,res)=>{
-    const type = req.headers.type || 'all';
-    let matchStage = {};
-    if (type === 'free') {
-        matchStage = {
-            $or: [
-                { imageType: { $exists: false } }, 
-                { imageType: { $ne: 'paid' } }, 
-            ],
-        };
-    }
-    if (type === 'premium') {
-        matchStage = {
-               imageType : 'paid'
+    // const type = req.headers.type || 'all';
+    try{
+        const parseUrl = url.parse(req.url, true)
+        let {type, pagesize = 5,curentpage = 1} = parseUrl.query
+
+        pagesize = pagesize >100 && pagesize<0 ? 5 : Number(pagesize)
+        curentpage = curentpage < 1 ? 1 : Number(curentpage)
+        const skip = (curentpage - 1) * pagesize;
+
+        let matchStage = {};
+        if (type === 'free') {
+            matchStage = {
+                $or: [
+                    { imageType: { $exists: false } }, 
+                    { imageType: { $ne: 'paid' } }, 
+                ],
+            };
         }
-    }
-    const pipeline = [
-        {
-            $match: matchStage, 
-        },
-        {
-            $lookup : {
-                from : 'orders',
-                localField : '_id',
-                foreignField : 'image',
-                as : 'order'
-            }
-        },
-        {
-            $addFields : {
-                orderCount : { $size : '$order'}
-            }
-        },
-        {
-            $project : {
-                order : 0
+        if (type === 'premium') {
+            matchStage = {
+                imageType : 'paid'
             }
         }
-    ]
-    if(type === 'popular'){
-        pipeline.push(
+        const pipeline = [
             {
-                $sort : {
-                    orderCount : -1
-                }, 
+                $match: matchStage, 
             },
             {
-                $limit : 10
+                $lookup : {
+                    from : 'orders',
+                    localField : '_id',
+                    foreignField : 'image',
+                    as : 'order'
+                }
+            },
+            {
+                $addFields : {
+                    orderCount : { $size : '$order'}
+                }
+            },
+            {
+                $project : {
+                    order : 0
+                }
             }
-    )
-    }else{
-        pipeline.unshift({
-            $match : matchStage
-        })
-    }
-    pipeline.push({
-        $project: {
-            order: 0, 
-        },
-    })
-    try{
+        ]
+        
+        if(type === 'popular'){
+            pipeline.push(
+                {
+                    $sort : {
+                        orderCount : -1
+                    }, 
+                },       
+        )
+        }
+        
+        let totalImages = await Image.countDocuments(matchStage);
+        const totalPages = Math.ceil(totalImages / pagesize);
+
+        pipeline.push( 
+            {
+                $skip: skip, 
+            },
+            {
+                $limit: pagesize,
+            }
+        )
+        if (curentpage > totalPages) {
+            return res.status(200).json({
+                status: 'success',
+                message: 'Page number exceeds total pages',
+                currentPage: curentpage,
+                totalPages,
+                totalImages,
+                images: [],
+            });
+        }
         const images = await Image.aggregate(pipeline)
+       
         res.status(200).json({
             status: "success",
-            images : images
+            images : images,
+            totalPages,
+            totalImages,
+            images,
         }) 
     }catch(err){
         res.status(500).json({
