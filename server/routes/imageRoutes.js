@@ -1,5 +1,5 @@
 const express = require("express");
-const { uploadImage, getImages, removeImage, getImage, getImagesList } = require("../controller/imageController");
+const { uploadImage, getImages, removeImage, getImage, getImagesList, editImage } = require("../controller/imageController");
 const uplaod = require('./../middelware/multer-upload');
 const { protect } = require("../middelware/protect");
 const router = express.Router();
@@ -14,6 +14,6 @@ router.route('/list')
 router.route('/:id')
     .get(getImage)
     .delete(removeImage)
-
+    .put(protect,uplaod.single('image'),editImage)
 
 module.exports = router;    

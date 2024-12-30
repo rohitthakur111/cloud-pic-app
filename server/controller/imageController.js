@@ -2,6 +2,8 @@ const Image = require('./../models/imageSchema')
 const url = require('url')
         
 const cloudinary = require('cloudinary').v2;
+const sharp = require('sharp');
+
 const fs = require("fs")
 // Cloudinary configuration
 
@@ -50,23 +52,45 @@ exports.uploadImage = async(req,res)=>{
             price = undefined;
             currency = undefined;  
         }
-        const result = await cloudinary.uploader.upload_stream({ folder: '/cloud/images' }, async (error, result) => {
-            if (error) {
-                return res.status(500).json({ status: "fail", error: error.message });
+        const targetSizeKB = 200; 
+        const targetSizeBytes = targetSizeKB * 1024;
+
+        let compressedImageBuffer;
+        let quality = 80; 
+        do {
+            compressedImageBuffer = await sharp(req.file.buffer)
+                .resize(800, 800, { fit: 'inside' }) 
+                .jpeg({ quality })                  
+                .toBuffer();
+
+            if (compressedImageBuffer.length > targetSizeBytes) {
+                quality -= 5; 
             }
+        } while (compressedImageBuffer.length > targetSizeBytes && quality > 10); 
 
-            const { public_id } = result;
-            const imageUrl = result?.secure_url;
-            const newImage = new Image({user : user?._id, public_id, title, description, imageUrl, price, currency,imageType });
-            await newImage.save();
+        const uploadPromise = new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+                { folder: '/cloud/images' },
+                (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result);
+                }
+            );
+            stream.end(compressedImageBuffer);
+        });
 
-            res.status(201).json({
-                status: "success",
-                image: newImage
-            });
-        }).end(req.file.buffer); 
+        const uploadResult = await uploadPromise;
+        const { public_id, secure_url: imageUrl } = uploadResult;
+        const newImage = new Image({user : user?._id, public_id, title, description, imageUrl, price, currency,imageType });
+
+        await newImage.save();
+
+        res.status(201).json({
+            status: "success",
+            image: newImage
+        });
+    
     }catch(err){
-        // if(req?.file?.path) deleteImage(req.file.path)
         res.status(500).json({
             status: "fail",
             error : err.message
@@ -78,13 +102,20 @@ exports.uploadImage = async(req,res)=>{
 exports.removeImage = async(req,res)=>{
     try{
         const { id } = req.params;
+        const user = req.user;
         let image = await Image.findById(id)
         if(!image)
             return res.status(404).json({
                 status: "fail",
-                error : 'image not found'                                                                                                                                                                                                                                       
+                error : 'image not found'                       
             })
-            
+        
+        // validate unauthrize acceess
+        if(user?.role !=="admin" && user.id !== image.user ) return res.status(401).json({
+            status: "fail",
+            error: 'Permission not allowed.'
+        });
+
         const { public_id } = image;
         image =  await Image.findByIdAndDelete(image.id)
 
@@ -103,6 +134,86 @@ exports.removeImage = async(req,res)=>{
                 result: result
             });
         });
+    }catch(err){
+        res.status(500).json({
+            status: "fail",
+            error : err.message
+        }) 
+    }
+}
+
+/**  UPDATE IMAGE AND PROTECT ROUTE */
+
+exports.editImage = async(req,res)=>{
+    const user = req.user;
+    const { id } = req.params; 
+    try{
+        const image = await Image.findById(id);
+
+        if(!image){
+            return res.status(400).json({
+                status: "fail",
+                error : 'image not found' 
+            })
+        }
+        // unauthrize request
+        if(user?.role?.toLocaleLowerCase() !=="admin" && user.id !== image.user ) return res.status(401).json({
+            status: "fail",
+            error: 'Permission not allowed.'
+        });
+        if (req.file) {
+            const targetSizeKB = 200; 
+            const targetSizeBytes = targetSizeKB * 1024;
+
+            let compressedImageBuffer;
+            let quality = 80; 
+
+            do {
+                compressedImageBuffer = await sharp(req.file.buffer)
+                    .resize(800, 800, { fit: 'inside' }) 
+                    .jpeg({ quality })                  
+                    .toBuffer();
+
+                if (compressedImageBuffer.length > targetSizeBytes) {
+                    quality -= 5; 
+                }
+            } while (compressedImageBuffer.length > targetSizeBytes && quality > 10); 
+
+            const uploadPromise = new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: '/cloud/images' },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
+                    }
+                );
+                stream.end(compressedImageBuffer);
+            });
+
+            const uploadResult = await uploadPromise;
+            const { public_id, secure_url: imageUrl } = uploadResult;
+
+            // Update the image in the database
+            cloudinary.uploader.destroy(image.public_id)
+
+            const updatedImage = await Image.findByIdAndUpdate(
+                id, { ...req.body, public_id, imageUrl },{ new: true } );
+
+            return res.status(201).json({
+                status: "success",
+                image: updatedImage,
+            });
+        }
+
+        const updatedImage = await Image.findByIdAndUpdate(
+            id,
+            req.body,
+            { new: true }
+        )
+        return res.status(200).json({
+            status: "success",
+            image: updatedImage,
+        })
     }catch(err){
         res.status(500).json({
             status: "fail",
