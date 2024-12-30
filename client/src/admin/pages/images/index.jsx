@@ -35,8 +35,10 @@ const index = () => {
         setSearchParams((prevState)=>{
             const newParams = new URLSearchParams(prevState);
             newParams.set('type',newValue)
+            newParams.set('currentpage',1)
             return newParams
         })
+        setPage(1)
     }
 
     const [images, setImages] = useState([])
@@ -80,7 +82,7 @@ const index = () => {
     }
     const setPageSize = (pageSize)=> {
         if(pageSize === paginations.pageSize) return
-        setPaginations(prevState=>({...prevState, pageSize}))
+        setPaginations(prevState=>({...prevState, currentPage : 1, pageSize}))
     }
 
     // handle params when change param

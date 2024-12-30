@@ -21,13 +21,13 @@ const Table = ({images, paginations}) => {
             </div>
 
             <div className="flex-shrink-0">
-                <Link to={`/image/${image._id}`}>
+                <Link to={`${image._id}`}>
                     <img className="w-12 rounded-full h-12" src={image.imageUrl} alt="Brand"/>
                 </Link>
             </div>
      
             <div className="items-center">
-                <Link to={`/image/${image._id}`}>
+                <Link to={`${image._id}`}>
                     <p className="font-medium text-black">{image.title}</p>
                 </Link>
             </div>

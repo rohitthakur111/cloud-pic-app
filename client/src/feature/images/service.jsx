@@ -33,6 +33,20 @@ export const removeImage = async(id)=>{
         throw error
     }
 }
+export const editImage = async(id,formData)=>{
+    try{
+        const token = localStorage.getItem('token')
+        const response =  await Api.put(`/images/${id}`, formData, { headers : {
+            "Content-Type" :  "multipart/form-data",
+            'Authorization' : `Bearer ${token}`
+        }});
+        response.id = id;
+        console.log(response)
+        return response.data
+    }catch(error){
+        throw error
+    }
+}
 
 export const getImage = async(id)=>{
     try{
@@ -46,7 +60,6 @@ export const getImage = async(id)=>{
 export const getImageList = async( query )=>{
     try{
         const response =  await Api.get('/images/list?' + query); 
-        console.log(response.data)
         return response.data
     }catch(error){
         throw error

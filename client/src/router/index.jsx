@@ -15,6 +15,8 @@ import  Dashboard  from "../admin/pages/dashboard";
 import  Images  from "../admin/pages/images";
 import  UserList  from "../admin/pages/users";
 import AddImage from "../admin/pages/newimage";
+import AdminImage from "../admin/pages/image";
+import EditImage from "../admin/pages/editimage/index.jsx";
 
 const router = createBrowserRouter([
 {
@@ -69,7 +71,15 @@ const router = createBrowserRouter([
         },
         {
             path : 'images',
-            element : <Images />
+            element : <Images />,
+        },
+        {
+            path : 'images/:id',
+            element : <AdminImage />
+        },
+        {
+            path : 'images/:id/edit',
+            element : <EditImage />
         },
         {
             path : 'users',
@@ -79,6 +89,7 @@ const router = createBrowserRouter([
             path: "add-new",
             element: <AddImage/>,
         },
+        
     ]
 
     

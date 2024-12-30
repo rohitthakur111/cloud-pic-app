@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { addImage, getImages, removeImage } from './service';
+import { addImage, editImage, getImages, removeImage } from './service';
 
 const findIndex = (id, items)=>{
     console.log('id', id)
@@ -33,6 +33,14 @@ export const removeImageAsync = createAsyncThunk(
     }
 )
 
+export const editImageAsync = createAsyncThunk(
+    '/edit/image',
+    async({id,formData})=>{
+        console.log(id)
+        const data = await editImage(id,formData)
+        return data;
+    }   
+)
 export const counterSlice = createSlice({
     name: 'image',
     initialState: {

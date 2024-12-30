@@ -14,6 +14,7 @@ import { getOrderAsync } from "../feature/order/orderSlice"
 import Modal from "./Modal"
 import { modalState, setTransition, showHideModal } from "../feature/visual/visualSlice"
 import { TbBrandAppgallery } from "react-icons/tb"
+import { PROD_ENV } from "../api"
 
 const Header =({keyword, setKeyword}) =>{
   const { pathname } = useLocation()
@@ -94,7 +95,7 @@ const Header =({keyword, setKeyword}) =>{
 
   document.addEventListener("mousedown", handleClickOutside);
   // hide context meu ** imp
-  window.addEventListener("contextmenu", e => e.preventDefault());
+  if(PROD_ENV) window.addEventListener("contextmenu", e => e.preventDefault());
   document.onkeydown = (e) => {
     if (e.key == 123) {
         e.preventDefault();
