@@ -18,7 +18,7 @@ const Image = ({image, deleteClick, deleteRef }) => {
                             type="button"
                             className="btn bg-red-500 text-white transition-colors duration-500 ease-in-out  hover:bg-red-400"
                             onClick={ deleteClick }
-                            ref={deleteRef}
+                            ref={(el) => (deleteRef.current[image._id] = el)} 
                         >
                             Delete
                     </button>

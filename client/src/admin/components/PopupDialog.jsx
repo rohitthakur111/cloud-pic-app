@@ -7,21 +7,21 @@ const PopupDialog = ({ message, title, onConfirm, isOpen,setIsOpen,deleteRef,loa
    
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        isOpen &&
-        !popUp?.current?.contains(e.target) &&
-        deleteRef &&
-        !deleteRef?.current?.contains(e.target)
-      ) {
-        setIsOpen(false);
-        setDeleteLoading(false)
-      }
+        if (
+          isOpen &&
+          !popUp?.current?.contains(e.target) &&
+          !Object.values(deleteRef.current).some((ref) => ref && ref.contains(e.target))
+        ) {
+            setIsOpen(false);
+            setDeleteLoading(false);
+        }
     };
     document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+        document.removeEventListener('click', handleClickOutside);
     };
-  }, [isOpen, setIsOpen, deleteRef]);
+}, [isOpen, setIsOpen, deleteRef]);
+
 
   if (!isOpen) return null;
   return (

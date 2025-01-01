@@ -52,7 +52,7 @@ const index = () => {
     
     // delete image 
     const [isOpen, setIsOpen] = useState(false)
-    const deleteRef = useRef()
+    const deleteRef = useRef({})
 
     const handleDeleteClick = ()=> {
         setIsOpen(true)

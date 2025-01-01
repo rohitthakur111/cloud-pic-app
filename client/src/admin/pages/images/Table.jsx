@@ -8,14 +8,13 @@ const Table = ({images, paginations}) => {
         
     // delete image 
     const [isOpen, setIsOpen] = useState(false)
-    const deleteRef = useRef()
+    const deleteRef = useRef({})
     const [image, setImage] = useState(null)
     const [deleteLoading, setDeleteLoading] = useState(false)
 
     const handleDeleteClick = (image)=> {
+        setImage(image)
         setIsOpen(true)
-        console.log("clicked", deleteRef)
-        setImage(deleteRef)
     }
 
     const deletePost = async ()=>{
@@ -86,7 +85,7 @@ const Table = ({images, paginations}) => {
                     <button 
                         className='bg-red-500 text-white p-2 rounded'
                         onClick={()=> handleDeleteClick(image)}
-                        ref={deleteRef}
+                        ref={(el) => (deleteRef.current[image._id] = el)}
                         >
                         <RiDeleteBin6Line />
                     </button>
