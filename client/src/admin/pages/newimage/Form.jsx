@@ -3,7 +3,7 @@ import { FaCloudUploadAlt, FaRegEdit } from 'react-icons/fa'
 import SingleImage from '../../../components/SingleImage'
 import { Link } from 'react-router-dom'
 
-const Form = ({handleSubmit, disable, loading, post, handleImageChange,handleChangePostData, error,changeImageType,cancel, buttonText="Upload Image", id}) => {
+const Form = ({handleSubmit, disable, loading, post, handleImageChange,handleChangePostData, error,changeImageType, buttonText="Upload Image", id}) => {
   return (
     <form onSubmit={handleSubmit}>
         <div className='w-full flex justify-center mt-4'>
@@ -109,15 +109,6 @@ const Form = ({handleSubmit, disable, loading, post, handleImageChange,handleCha
                             {buttonText}
                             {loading && <span className="loading loading-spinner text-xs text-error"></span>}
                         </button>
-                        {cancel &&
-                            <Link 
-                                type="submit" 
-                                className="bg-teal-500 rounded p-2 uppercase text-white text-base font-semibold hover:bg-teal-400 text-center"
-                                to={`/admin/images/${id}`}
-                            >
-                            Cancel
-                            </Link>
-                        }
                     </div>
                 </div>
             </div>

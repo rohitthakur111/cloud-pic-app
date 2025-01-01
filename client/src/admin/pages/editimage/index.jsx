@@ -1,28 +1,26 @@
 
 import React, { useEffect, useState } from 'react'
-import { FaCloudUploadAlt, FaRegEdit } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch,  } from 'react-redux';
 import toast from 'react-hot-toast';
-import {  addImageAsync, editImageAsync, imageLoading  } from '../../../feature/images/imageSlice';
 import Breadcrumbs from '../../../components/Breadcrumbs';
 import  Form from '../newimage/Form';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getImage } from '../../../feature/images/service';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { editImage, getImage } from '../../../feature/images/service';
 import ErrorMessage from '../../../components/Error';
+import { TfiControlBackward } from 'react-icons/tfi';
 
 const EditImage = () => {
-    const dispatch = useDispatch()
     const [loading, setloading] = useState(false)
     const [disable, setDisable] = useState(false)
 
-    const [post, setPost] = useState({ title : '', description : '', image : null, imageType :'free', price:'', currency : "", imageUrl :''});
+    const [post, setPost] = useState({ title : '', description : '', image : null, imageType :'', price:'', currency : "", imageUrl :''});
     const [error, setError] = useState({ title : '', description : '', image : '',price : '', currency : "", imageUrl :'' });
 
     let [updatePost, setUpdatedPost] = useState({});
     const [errorMessage, setErrorMessegae] = useState('')
     const navigate = useNavigate();
     const { id } = useParams()
-    useEffect(()=>{
+    useEffect(()=>{ 
         setErrorMessegae("")
         if(!id) return
         (async()=>{
@@ -46,6 +44,7 @@ const EditImage = () => {
         Object.keys(post)?.forEach(key=>{
             if(updatePost[key] !== post[key] && post[key]) {
                 data[key] = post[key]
+                console.log(key)
             }
         })
         setDisable(Boolean(!Object.keys(data)?.length));
@@ -98,16 +97,22 @@ const EditImage = () => {
         })
         let length = 0;
         for (let [key, value] of formData.entries()) length++;
-        
-        if(length === 0) return toast.success('No changes updated')
-        const response = await dispatch(editImageAsync({id,formData}))
-        if(response?.payload?.status === "success"){
-            toast.success('Image Updated Successfully')
+            if(length === 0) return toast.success('No changes updated')
+        try{
+            const response = await editImage(id,formData)
+            if(response?.status === "success"){
+                toast.success('Image Updated Successfully')
+                setloading(false)
+                setUpdatedPost(response?.image)
+                navigate(`/admin/images/${id}`)
+            }else toast.error('Image is not uploaded!')
             setloading(false)
-            setUpdatedPost(response?.payload?.image)
-            navigate(`/admin/images/${id}`)
-        }else toast.error('Image is not uploaded!')
-        setloading(false)
+        }catch(err){
+            toast.error(err.response.error || 'Post is not updated')
+            setloading(false)
+        }
+        
+
     }
 
     // Change Image Type of 
@@ -118,8 +123,11 @@ const EditImage = () => {
             link : "/Admin",
         },
         {
+            title : "Images",
+            link : "/Admin/Images",
+        },
+        {
             title : "Edit Image",
-            link : "",
         }
     ]
 
@@ -128,6 +136,12 @@ const EditImage = () => {
     <div className='flex justify-between items-center position-sticky top-0 border-b bg-sky-50 rounded p-2 text-gray-600'>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
     </div>
+
+    <button className='p-2 flex items-center bg-gray-200 rounded font-medium' onClick={()=>navigate(-1)}>
+        <span className='text-red-400 text-lg'><TfiControlBackward /> </span>
+        <span>Cancel</span>
+    </button>    
+
     {errorMessage ? <ErrorMessage error={errorMessage}/> :
     <Form 
         handleSubmit={handleSubmit} 
@@ -139,8 +153,6 @@ const EditImage = () => {
         changeImageType={changeImageType}
         buttonText = "Update Image"
         disable={disable}
-        cancel={true}
-        id={id}
     />
     } 
     </>

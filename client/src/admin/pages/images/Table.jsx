@@ -1,11 +1,52 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { FiEdit } from 'react-icons/fi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+import PopupDialog from '../../components/PopupDialog'
 
 const Table = ({images, paginations}) => {
+        
+    // delete image 
+    const [isOpen, setIsOpen] = useState(false)
+    const deleteRef = useRef()
+    const [image, setImage] = useState(null)
+    const [deleteLoading, setDeleteLoading] = useState(false)
+
+    const handleDeleteClick = (image)=> {
+        setIsOpen(true)
+        console.log("clicked", deleteRef)
+        setImage(deleteRef)
+    }
+
+    const deletePost = async ()=>{
+        try{
+            setDeleteLoading(true)
+            const response = await removeImage(id)
+            if(response.status ==="success") {
+                setIsOpen(false)
+                toast.success('Post deleted successfully')
+                navigate("/Admin/images")
+            }
+            setDeleteLoading(false)
+        }catch(err){
+            setIsOpen(false)
+            setDeleteLoading(false)
+            toast.success(err.response.error || 'Post is not deleted!')
+        }
+    }
+   
   return (
     <div className='rounded-sm shadow-default '>
+        <PopupDialog 
+            message="Are you sure want to delete image" 
+            title={image?.title}
+            onConfirm={deletePost} 
+            isOpen={isOpen} 
+            setIsOpen={setIsOpen}
+            deleteRef={deleteRef}
+            loading={deleteLoading}
+            setDeleteLoading={setDeleteLoading}
+        />
         <div className='w-full grid grid-cols-3 rounded-sm bg-gray-50 sm:grid-cols-6 p-4'>
             <h5 className="text-sm center font-medium xsm:text-base">#</h5>
             <h5 className="text-sm font-medium  xsm:text-base">Image</h5>
@@ -42,8 +83,14 @@ const Table = ({images, paginations}) => {
             </div>
             <div className="items-center ">
                <div className='flex justify-center gap-2'>
-                    <button className='bg-red-500 text-white p-2 rounded'><RiDeleteBin6Line /></button>
-                    <button className='bg-green-500 text-white p-2 rounded'><FiEdit /></button>
+                    <button 
+                        className='bg-red-500 text-white p-2 rounded'
+                        onClick={()=> handleDeleteClick(image)}
+                        ref={deleteRef}
+                        >
+                        <RiDeleteBin6Line />
+                    </button>
+                    <Link to={`/admin/images/${image._id}/edit`} className='bg-green-500 text-white p-2 rounded'><FiEdit /></Link>
                </div>
             </div>
           

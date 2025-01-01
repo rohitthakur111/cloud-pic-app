@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { getImageList } from '../../../feature/images/service'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import { useSearchParams } from 'react-router-dom'
 import Table from './Table.jsx'
 import Paginations from '../../../components/Paginations.jsx'
 import PageSize from './PageSize.jsx'   
+import PopupDialog from '../../components/PopupDialog.jsx'
  // Type of images
  const options = [
     { title : "All", value : 'all'},
@@ -63,7 +64,6 @@ const index = () => {
         },
         {
             title : "Images",
-            link : "",
         }
     ]
 
@@ -95,6 +95,7 @@ const index = () => {
             return newParams
         }))
     },[paginations])
+
   return (
     <div>
         <div className='flex justify-between items-center border-b bg-sky-50 rounded p-2 text-gray-600'>

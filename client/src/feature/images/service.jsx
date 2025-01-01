@@ -26,7 +26,12 @@ export const addImage = async(formData)=>{
 
 export const removeImage = async(id)=>{
     try{
-        const response =  await Api.delete(`/images/${id}`);
+        const token = localStorage.getItem('token')
+        const response =  await Api.delete(`/images/${id}`,{ headers : {
+            "Content-Type" :  "multipart/form-data",
+            'Authorization' : `Bearer ${token}`
+        }});
+
         response.id = id;
         return response.data
     }catch(error){
@@ -41,7 +46,6 @@ export const editImage = async(id,formData)=>{
             'Authorization' : `Bearer ${token}`
         }});
         response.id = id;
-        console.log(response)
         return response.data
     }catch(error){
         throw error

@@ -1,7 +1,7 @@
 import React from 'react'
 import SingleImage from '../../../components/SingleImage';
 import { Link } from 'react-router-dom';
-const Image = ({image}) => {
+const Image = ({image, deleteClick, deleteRef }) => {
     return (
         <div className="flex flex-col items-start lg:flex-row gap-8  my-4 pb-8 border-b">
             <SingleImage image={image}/>
@@ -17,11 +17,12 @@ const Image = ({image}) => {
                     <button 
                             type="button"
                             className="btn bg-red-500 text-white transition-colors duration-500 ease-in-out  hover:bg-red-400"
-                            onClick={ async ()=> await handleDownloadPremium()}
+                            onClick={ deleteClick }
+                            ref={deleteRef}
                         >
                             Delete
                     </button>
-                    <Link 
+                    <Link
                             type="button"
                             className="btn bg-green-500 text-white transition-colors duration-600 ease-in-out  hover:bg-green-500"
                             to='edit'

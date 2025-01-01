@@ -73,7 +73,11 @@ const AddImage = () => {
             link : "/Admin",
         },
         {
-            title : "Add New Image",
+            title : "Images",
+            link : "/Admin/Images",
+        },
+        {
+            title : "Add New",
             link : "",
         }
     ]
