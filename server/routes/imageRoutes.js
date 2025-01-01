@@ -13,7 +13,7 @@ router.route('/list')
 
 router.route('/:id')
     .get(getImage)
-    .delete(removeImage)
+    .delete(protect, removeImage)
     .put(protect,uplaod.single('image'),editImage)
 
 module.exports = router;    

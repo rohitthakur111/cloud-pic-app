@@ -9,6 +9,7 @@ exports.protect = async(req,res,next)=>{
     let { authorization } = req?.headers;
     authorization = authorization?.split(' ')
     token = authorization[1]
+    if(!token || token ==="null") return res.status(400).json({ status : 'fail', error : 'Login again!'}) 
     try{
         var decoded = jwt.verify(token, secret);
         if(!decoded) return res.status(400).json({ status : 'fail', error : 'Login again!'}) 
