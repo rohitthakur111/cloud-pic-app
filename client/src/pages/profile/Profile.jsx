@@ -1,256 +1,231 @@
-import React, { useEffect, useState } from 'react'
-import { FaArrowRightLong } from 'react-icons/fa6'
-import { loginLoading, loginUser, updateAccountAsync } from '../../feature/auth/authSlice'
-import { useDispatch, useSelector } from 'react-redux'
-import { LiaEdit } from 'react-icons/lia'
-import { TbEdit } from 'react-icons/tb'
+import React, { useEffect, useState } from 'react';
+import { FaArrowRightLong } from 'react-icons/fa6';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { TbEdit } from 'react-icons/tb';
+import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-
+import Breadcrumbs from '../../components/Breadcrumbs';
+import { loginLoading, loginUser, updateAccountAsync } from '../../feature/auth/authSlice';
 
 const Profile = () => {
-    const dispatch = useDispatch()
-    const loggedUser = useSelector(loginUser)
-    const updateLoading = useSelector(loginLoading)
+    const dispatch = useDispatch();
+    const loggedUser = useSelector(loginUser);
+    const updateLoading = useSelector(loginLoading);
 
-    const [user,setUser] = useState({ userName : '', email : '', bio : '',gender : '', dateOfBirth : '', phone :'', location : { country : '' , city : ''}, role : '', profilePicture : ''})
+    const [user, setUser] = useState({
+        userName: '', email: '', bio: '', gender: '', dateOfBirth: '',
+        phone: '', location: { country: '', city: '' }, profilePicture: ''
+    });
+    const [updateUser, setUpdateUser] = useState({ ...user });
+    const [isChanged, setIsChanged] = useState(false);
 
-    let [isChanged, setIsChanged] = useState(false);
-    const [updateUser, setUpdateUser] = useState({
-            userName : '', 
-            email : '', 
-            bio : '',
-            gender : '',
-            dateOfBirth : '', 
-            phone :'',
-            location : { country : '' , city : ''},
-            role : '',
-            profilePicture : null,
-
-        }) 
-    useEffect(()=>{
-        if(loggedUser){
-            setUser(prevUser=>({ ...prevUser, 
-                userName : loggedUser?.userName ?? '', 
-                email : loggedUser?.email ?? '', 
-                bio : loggedUser?.bio ?? '', 
-                gender : loggedUser?.gender ?? '', 
-                dateOfBirth : loggedUser?.dateOfBirth ?? '', 
-                phone : loggedUser?.phone ?? '',
-                location : { country : loggedUser?.location?.country ?? '' , city : loggedUser?.location?.city ?? ''},
-                profilePicture : loggedUser?.profilePicture ?? null, 
-            }))  
+    useEffect(() => {
+        if (loggedUser) {
+            setUser({
+                userName: loggedUser?.userName || '',
+                email: loggedUser?.email || '',
+                bio: loggedUser?.bio || '',
+                gender: loggedUser?.gender || '',
+                dateOfBirth: loggedUser?.dateOfBirth || '',
+                phone: loggedUser?.phone || '',
+                location: {
+                    country: loggedUser?.location?.country || '',
+                    city: loggedUser?.location?.city || ''
+                },
+                profilePicture: loggedUser?.profilePicture || null,
+            });
         }
-    },[loggedUser])
+    }, [loggedUser]);
 
+    const handleChange = (e) => {
+        setIsChanged(true);
+        const { name, value } = e.target;
 
-    const handleChangeUser = (e)=>{
-        setIsChanged(true)
-        if(e.target.name === 'city' || e.target.name === 'country'){
-            setUser(prevuser=>({...prevuser, location : {...prevuser.location, [e.target.name] : e.target.value } }))
-            setUpdateUser(prevuser=>({...prevuser, location : {...prevuser.location, [e.target.name] : e.target.value } }))
-            return 
+        if (['city', 'country'].includes(name)) {
+            setUser(prev => ({
+                ...prev,
+                location: { ...prev.location, [name]: value }
+            }));
+            setUpdateUser(prev => ({
+                ...prev,
+                location: { ...prev.location, [name]: value }
+            }));
+        } else {
+            setUser(prev => ({ ...prev, [name]: value }));
+            setUpdateUser(prev => ({ ...prev, [name]: value }));
         }
-        setUser(prevuser=>({...prevuser, [e.target.name] : e.target.value }))
-        setUpdateUser(prevuser=>({...prevuser, [e.target.name] : e.target.value }))
-    }
-    const handleImage = (e)=>{
-        setUser(prevUser => ({...prevUser, profilePicture : URL.createObjectURL(e.target.files[0]) }))
-        setUpdateUser(prevUpdateUser=>({ ...prevUpdateUser, profilePicture : e.target.files[0]}))
-        setIsChanged(true)
-    }
+    };
 
-    //  handle update user 
-    const handleUpadateUser = async(e)=>{
-        e.preventDefault()
-        console.log(updateUser.profilePicture)
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setUser(prev => ({ ...prev, profilePicture: URL.createObjectURL(file) }));
+            setUpdateUser(prev => ({ ...prev, profilePicture: file }));
+            setIsChanged(true);
+        }
+    };
+
+    const handleUpdateUser = async (e) => {
+        e.preventDefault();
         const formData = new FormData();
-        Object.keys(updateUser).forEach(key => {
-           if(updateUser[key] && key !== 'location'){
-                formData.append(key, updateUser[key])
-           }
-           if(key === 'location'){
-            Object.keys(updateUser.location).forEach(subkey=>{ 
-                if(`location[${subkey}]`){
-                    formData.append(`location[${subkey}]`, updateUser.location[subkey])
-                }
-            })
-           }
+        Object.entries(updateUser).forEach(([key, value]) => {
+            if (value && key !== 'location') formData.append(key, value);
+            if (key === 'location') {
+                Object.entries(value).forEach(([subKey, subValue]) => {
+                    formData.append(`location[${subKey}]`, subValue);
+                });
+            }
         });
-    
-        const data = await dispatch(updateAccountAsync(formData))   
-        if(data.payload.data)
-            toast.success('Account Updated Successfully')  
-            else toast.error('Please try latter')
-        setIsChanged(false)
 
-    }
+        const result = await dispatch(updateAccountAsync(formData));
+        if (result.payload?.data) toast.success('Profile updated successfully');
+        else toast.error('An error occurred. Please try again.');
+        setIsChanged(false);
+    };
+
+    const breadcrumbs = [
+        { title: "Home", link: "/" },
+        { title: "Profile" },
+        { title: "Edit" }
+    ];
+
     return (
-        <div className='w-full'>
-            <form onSubmit={handleUpadateUser}>
-                <div className='flex justify-between p-2 border-b border-teal-300 border-opacity-50'>
-                    <h2 className='text-2xl font-medium'>My Profile {'>>'} Edit Profile</h2>
-                    <button 
-                        className={`flex items-center gap-4 px-4 py-2 rounded text-md text-white font-medium transition-colors duration-500 ease-in-out ${!isChanged || updateLoading ? 'bg-gray-400' : ' bg-red-400 hover:bg-teal-500'} `}
-                        type="submit"
-                        disabled={!isChanged || updateLoading}
-                    >
-                        Save Changes  {!updateLoading ? <FaArrowRightLong /> :
-                      <span className='animate-spin font-bold text-base font-medium'><AiOutlineLoading3Quarters /></span>
-                       }
-                    </button>
-                </div>
-                <div className='w-full flex flex-col xl:flex-row'>
-                    <div className='w-full xl:w:1/2 lg:border-r border-teal-300 border-opacity-50'>
-                        <div className='p-8 pb-0 xl:pb-8'>
-
-                            <div className="flex justify-center avatar placeholder">
-                                <div className="w-32 xl:w-40 justify-center rounded-full bg-teal-500 text-white">
-                                    {user?.profilePicture ? (
-                                    <img src={user?.profilePicture} alt="User Avatar" />
-                                    ) : (
-                                    <span className="text-7xl font-medium uppercase" role="button">{user?.userName?.charAt(0)}</span>
-                                    )}
-                                    
-                                </div>
-                                <label className='flex justify-center relative cursor-pointer'>
-                                    <span className='absolute text-2xl text-teal-700 '><TbEdit /></span>
-                                    <input type="file" name="profilePicture" className='h-0 w-0'  accept="image/*" onChange={handleImage}/>
-                                </label>
-                            </div>
-                            
-                            <div className='w-full flex-col'>
-                                <div className='w-full flex flex-col md:flex-row gap-4 my-4'>
-                                    <label className="w-full input input-bordered flex items-center gap-2">
-                                        
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 16 16"
-                                            fill="currentColor"
-                                            className="h-4 w-4 opacity-70">
-                                            <path
-                                            d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                                        </svg>
-                                        
-                                        <input 
-                                            type="text" 
-                                            className="grow" 
-                                            placeholder="User Name" 
-                                            name="userName" 
-                                            value={user?.userName}
-                                            onChange={handleChangeUser}
-                                            required
-                                        />
-                                    </label>
-                                    <label className="w-full input input-bordered flex items-center gap-2">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 16 16"
-                                            fill="currentColor"
-                                            className="h-4 w-4 opacity-70">
-                                            <path
-                                            d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-                                            <path
-                                            d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-                                        </svg>
-                                        <input 
-                                            type="email" 
-                                            className="grow text-gray-500" 
-                                            placeholder="User Email"
-                                            name="email" 
-                                            value={user?.email}
-                                            disabled={true}
-                                        />
-                                    </label>
-                                </div>    
-                                <div>
-                                    <label className="w-full text-lg font-medium">Bio</label>
-                                    <textarea 
-                                        className="textarea textarea-bordered w-full" 
-                                        placeholder="Bio" 
-                                        name="bio"
-                                        value={user?.bio}
-                                        onChange={handleChangeUser}
-                                    >
-                                    </textarea>
-                                </div>
-                            </div>
-                        </div>
+        <div className="section-container">
+            <div className="outlet-container container">
+                <div className="w-full">
+                    {/* Header Section */}
+                    <div className="flex justify-between items-center bg-sky-50 p-4 border-b">
+                        <Breadcrumbs breadcrumbs={breadcrumbs} />
                     </div>
-                    <div className='w-full xl:w:1/2'>
-                        <div className='p-8 pb-0 xl:pb-8'>
-                            <div className='flex flex-col md:flex-row gap-4'>
-                                <label className='w-full flex flex-col gap-1 text-lg font-medium'>
-                                    <span >Gender</span>
-                                    <select 
-                                        className="select select-bordered w-full" name="gender" 
-                                        value={user?.gender || ''}
-                                        onChange={handleChangeUser}
+
+                    {/* Form Section */}
+                    <form onSubmit={handleUpdateUser} className="bg-white rounded shadow p-6 space-y-6">
+                        <div className="flex justify-end">
+                            <button
+                                type="submit"
+                                disabled={!isChanged || updateLoading}
+                                className={`px-6 py-2 rounded text-white font-medium flex items-center gap-2 transition ${isChanged && !updateLoading ? 'bg-teal-500 hover:bg-teal-600' : 'bg-gray-400 cursor-not-allowed'
+                                    }`}
+                            >
+                                {updateLoading ? (
+                                    <AiOutlineLoading3Quarters className="animate-spin" />
+                                ) : (
+                                    <>
+                                        Save Changes
+                                        <FaArrowRightLong />
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Left Column */}
+                            <div className="space-y-6">
+                                {/* Profile Picture */}
+                                <div className="flex flex-col items-center">
+                                    <div className="relative">
+                                        <img
+                                            src={user?.profilePicture || '/placeholder-avatar.png'}
+                                            alt="Profile"
+                                            className="w-32 h-32 rounded-full object-cover"
+                                        />
+                                        <label className="absolute bottom-2 right-2 bg-teal-500 p-2 rounded-full text-white cursor-pointer">
+                                            <TbEdit />
+                                            <input type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {/* Name and Email */}
+                                <div className="flex flex-col gap-4">
+                                    <input
+                                        type="text"
+                                        name="userName"
+                                        value={user.userName}
+                                        onChange={handleChange}
+                                        placeholder="User Name"
+                                        className="input input-bordered w-full"
+                                        required
+                                    />
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={user.email}
+                                        disabled
+                                        className="input input-bordered w-full bg-gray-100"
+                                    />
+                                </div>
+
+                                {/* Bio */}
+                                <textarea
+                                    name="bio"
+                                    value={user.bio}
+                                    onChange={handleChange}
+                                    placeholder="Bio"
+                                    className="textarea textarea-bordered w-full"
+                                />
+                            </div>
+
+                            {/* Right Column */}
+                            <div className="space-y-6">
+                                {/* Gender and Date of Birth */}
+                                <div className="flex flex-col lg:flex-row gap-4">
+                                    <select
+                                        name="gender"
+                                        value={user.gender}
+                                        onChange={handleChange}
+                                        className="select select-bordered w-full"
                                     >
-                                        <option value="" disabled>Select Your gender?</option>
+                                        <option value="" disabled>Select Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                         <option value="Other">Other</option>
                                     </select>
-
-                                </label>
-                                <label className='w-full flex flex-col gap-1 text-lg font-medium'>
-                                    <span >Date of Birth</span>
-                                    <input 
+                                    <input
                                         type="date"
-                                        className="input input-bordered w-full" 
-                                        placeholder="User Email"
-                                        name="dateOfBirth" 
-                                        onChange={handleChangeUser}
-                                        value={user?.dateOfBirth?.slice(0,10)}
+                                        name="dateOfBirth"
+                                        value={user.dateOfBirth?.slice(0, 10)}
+                                        onChange={handleChange}
+                                        className="input input-bordered w-full"
                                     />
-                                </label>
-                                
-                            </div>
-                            <div className='flex flex-col lg:flex-row my-2'>
-                                <label className='w-full flex flex-col gap-1 text-lg font-medium'>
-                                    <span >Phone</span>
-                                    <input 
+                                </div>
+
+                                {/* Phone and Location */}
+                                <div className="flex flex-col lg:flex-row gap-4">
+                                    <input
                                         type="tel"
-                                        className="input input-bordered w-full" 
+                                        name="phone"
+                                        value={user.phone}
+                                        onChange={handleChange}
                                         placeholder="Phone"
-                                        name="phone" 
-                                        value={user?.phone}
-                                        onChange={handleChangeUser}
+                                        className="input input-bordered w-full"
                                     />
-                                </label>
-                            </div>
-                            <div className='flex flex-col md:flex-row my-2 gap-4'>
-                                <label className='w-full flex flex-col gap-1 text-lg font-medium'>
-                                    <span >Country</span>
-                                    <input 
+                                </div>
+                                <div className="flex flex-col lg:flex-row gap-4">
+                                    <input
                                         type="text"
-                                        className="input input-bordered w-full" 
+                                        name="country"
+                                        value={user.location.country}
+                                        onChange={handleChange}
                                         placeholder="Country"
-                                        name="country" 
-                                        value={user?.location?.country}
-                                        onChange={handleChangeUser}
+                                        className="input input-bordered w-full"
                                     />
-                                </label>
-                                <label className='w-full flex flex-col gap-1 text-lg font-medium'>
-                                    <span >City</span>
-                                    <input 
+                                    <input
                                         type="text"
-                                        className="input input-bordered w-full" 
+                                        name="city"
+                                        value={user.location.city}
+                                        onChange={handleChange}
                                         placeholder="City"
-                                        name="city" 
-                                        value={user?.location?.city}
-                                        onChange={handleChangeUser}
+                                        className="input input-bordered w-full"
                                     />
-                                </label>
-                            
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default Profile
+export default Profile;

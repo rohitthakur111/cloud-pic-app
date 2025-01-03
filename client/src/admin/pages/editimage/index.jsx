@@ -128,6 +128,9 @@ const EditImage = () => {
         },
         {
             title : "Edit Image",
+        },
+        {
+            title : updatePost?.title,
         }
     ]
 

@@ -5,6 +5,7 @@ import { getUserAsync, loginAsync, loginLoading, registerAsync } from '../featur
 import toast from 'react-hot-toast';
 import GoogleLoginBtn from './GoogleLoginBtn';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { Navigate } from 'react-router-dom';
 
 const Form = ({login}) => {
     const userLoading = useSelector(loginLoading)
@@ -18,11 +19,10 @@ const Form = ({login}) => {
         e.preventDefault();
         if(login){
             delete userData.userName
-            console.log('user', userData)
             const data = await dispatch(loginAsync(userData))
             if( data?.payload?.status === 'success'){
                 toast.success('Login Successfully')  
-                const user = await dispatch(getUserAsync());
+                await dispatch(getUserAsync());
             }
             else toast.error('Login with valid credential!')
         }else{
@@ -32,6 +32,7 @@ const Form = ({login}) => {
             else toast.error('Enter a valid data!')
 
         }
+        return <Navigate to=".." />
     }
   return (
     <>

@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import Home from "../pages/home/Home";
+import Shop from "../pages/images";
 import Main from "../layout/Main";
 import Image from '../pages/single/Image'
 import Login from "../pages/login/Login";
@@ -17,6 +17,7 @@ import  UserList  from "../admin/pages/users";
 import AddImage from "../admin/pages/newimage";
 import AdminImage from "../admin/pages/image";
 import EditImage from "../admin/pages/editimage/index.jsx";
+import Home from "../pages/home";
 
 const router = createBrowserRouter([
 {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Home/>,
+    },   
+    {
+        path: "/images",
+        element: <Shop/>,
     },
     {
         path : "/login",
