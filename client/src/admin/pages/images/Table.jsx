@@ -3,8 +3,10 @@ import { FiEdit } from 'react-icons/fi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import PopupDialog from '../../components/PopupDialog'
+import toast from 'react-hot-toast'
+import { removeImage } from '../../../feature/images/service'
 
-const Table = ({images, paginations}) => {
+const Table = ({images, paginations, setImages}) => {
         
     // delete image 
     const [isOpen, setIsOpen] = useState(false)
@@ -20,17 +22,17 @@ const Table = ({images, paginations}) => {
     const deletePost = async ()=>{
         try{
             setDeleteLoading(true)
-            const response = await removeImage(id)
+            const response = await removeImage(image._id)
             if(response.status ==="success") {
                 setIsOpen(false)
                 toast.success('Post deleted successfully')
-                navigate("/Admin/images")
+                setImages(prevState=> prevState.filter(item=>item._id !== response.id))
             }
             setDeleteLoading(false)
         }catch(err){
             setIsOpen(false)
             setDeleteLoading(false)
-            toast.success(err.response.error || 'Post is not deleted!')
+            toast.error(err.response?.error || 'Post is not deleted!')
         }
     }
    

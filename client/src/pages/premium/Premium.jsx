@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import Loading from '../../components/Loading'
 import { TbBrandAppgallery } from 'react-icons/tb'
 import Breadcrumbs from '../../components/Breadcrumbs'
+import LoginProtect from '../../components/LoginProtect'
 
 const Premium = () => {
   const loadingState = useSelector(orderLoading)
@@ -46,4 +47,4 @@ const Premium = () => {
   )
 }
 
-export default Premium
+export default LoginProtect(Premium)

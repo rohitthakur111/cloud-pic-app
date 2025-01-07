@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 const AdminSideBar = ({ isSidebarOpen, toggleSidebar }) => {
   return (
     <>
+    <div className='w-0px md:w-64 h-full '>
+      <div className='static md:fixed inset-y-0 left-0 bg-gray-800 '>
       {/* Hamburger Menu Button */}
       <button
         className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-gray-800 text-white rounded-md"
@@ -72,6 +74,8 @@ const AdminSideBar = ({ isSidebarOpen, toggleSidebar }) => {
           onClick={toggleSidebar}
         ></div>
       )}
+      </div>
+      </div>
     </>
   );
 };

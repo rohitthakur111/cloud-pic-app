@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { IoMdAdd } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
@@ -11,8 +10,6 @@ import { getOrderAsync } from "../feature/order/orderSlice";
 import Modal from "./Modal"; // Assuming the Modal component is imported correctly
 import { modalState, setTransition, showHideModal } from "../feature/visual/visualSlice";
 import { PROD_ENV } from "../api";
-import { AiOutlineLogin } from "react-icons/ai";
-import { CiSearch } from "react-icons/ci";
 import { IoCloseOutline } from "react-icons/io5";
 
 const Header = ({ keyword, setKeyword }) => {
@@ -23,23 +20,23 @@ const Header = ({ keyword, setKeyword }) => {
   const dropDownRef = useRef(null);
   const dropDownRefBtn = useRef(null);
   const sidebarRef = useRef(null);
+  const menuRef = useRef(null)
 
   const loginToken = useSelector(authToken);
   const user = useSelector(loginUser);
-
   const isModalOpen = useSelector(modalState);
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar open state
-  const [isBackgroundBlurred, setIsBackgroundBlurred] = useState(false); // For blur effect
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
+  const [isBackgroundBlurred, setIsBackgroundBlurred] = useState(false); 
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
 
   const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
+    setIsSidebarOpen(!isSidebarOpen);
     setIsBackgroundBlurred(!isSidebarOpen);
   };
 
@@ -89,32 +86,47 @@ const Header = ({ keyword, setKeyword }) => {
     dispatch(showHideModal(false));
   }, [pathname, loginToken]);
 
-  const handleClickOutside = (event) => {
-    if (
-      sidebarRef.current &&
-      !sidebarRef.current.contains(event.target) &&
-      dropDownRefBtn.current &&
-      !dropDownRefBtn.current.contains(event.target)
-    ) {
-      setIsSidebarOpen(false);
-      setIsBackgroundBlurred(false);
-    }
-  };
+  // const handleClickOutside = (event) => {
+  //   if (
+  //     isSidebarOpen &&
+  //     sidebarRef.current &&
+  //     !sidebarRef.current.contains(event.target) &&
+  //     dropDownRefBtn.current &&
+  //     !dropDownRefBtn.current.contains(event.target)&& 
+  //     menuRef.current && 
+  //     menuRef.current.contains(event.terget)
+  //   ) {
+  //     setIsSidebarOpen(false);
+  //     setIsBackgroundBlurred(false);
+  //     console.log("outside")
+  //   }
+  // };
 
-  document.addEventListener("mousedown", handleClickOutside);
+  useEffect(()=>{
+    const handleClickOutside = (e)=>{
+      if(!isOpen) return
+      if(menuRef.current && !menuRef.current.contains(e.target)){
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener("click", handleClickOutside);
+    return ()=> document.removeEventListener("click", handleClickOutside)
+  },[isOpen])
+ 
 
   if (PROD_ENV) window.addEventListener("contextmenu", (e) => e.preventDefault());
   document.onkeydown = (e) => {
     if (e.key === "123") e.preventDefault();
     if (e.ctrlKey && e.shiftKey && ["I", "C", "J"].includes(e.key)) e.preventDefault();
     if (e.ctrlKey && e.key === "U") e.preventDefault();
+    if (e.key === "F12") e.preventDefault();
+  
   };
 
   const [isSearch, setIsSearch] = useState(false);
   useEffect(() => {
     setIsSearch(pathname.toLocaleLowerCase() === "/" || /^\/image\/[^/]+$/.test(pathname));
-  });
-
+  },[]);
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 border-b-2 sticky top-0 z-50 px-4 md:px-8 lg:px-16">
@@ -122,7 +134,7 @@ const Header = ({ keyword, setKeyword }) => {
           <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="/images/logo.png" className="h-12 md:h-16" alt="Logo" />
             <span className="self-center text-xl md:text-2xl font-semibold whitespace-nowrap dark:text-white">
-              Pic Nest
+              <span className="text-gray-500">Pic</span><span className="text-teal-400">Nest</span> 
             </span>
           </Link>
           <div className="hidden md:flex items-center space-x-8">
@@ -136,10 +148,14 @@ const Header = ({ keyword, setKeyword }) => {
             >
               Images
             </Link>
-            <Link to="/free" className="text-lg text-gray-700 dark:text-white hover:text-teal-500">
+            <Link to="/free" 
+              className={`${pathname ==="/free" ? 'text-teal-500 font-semibold' : 'text-lg text-gray-700'}  dark:text-white hover:text-teal-500`}
+            >
               Free
             </Link>
-            <Link to="/premium" className="text-lg text-gray-700 dark:text-white hover:text-teal-500">
+            <Link to="/paid" 
+              className={`${pathname ==="/paid" ? 'text-teal-500 font-semibold' : 'text-lg text-gray-700'}  dark:text-white hover:text-teal-500`}
+            >
               Paid
             </Link>
            
@@ -166,9 +182,12 @@ const Header = ({ keyword, setKeyword }) => {
                   onClick={toggleDropdown}
                   ref={dropDownRefBtn}
                 >
-                  <div className="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center">
+                  <div 
+                    className="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center"
+                    ref={menuRef}
+                  >
                     {user?.profilePicture ? (
-                      <img src={user.profilePicture} alt="User Avatar" className="rounded-full" />
+                      <img src={user?.profilePicture} alt="User Avatar" className="rounded-full" />
                     ) : (
                       <span>{user?.userName?.charAt(0)}</span>
                     )}
@@ -181,11 +200,13 @@ const Header = ({ keyword, setKeyword }) => {
                   >
                     <Link
                       to="/profile"
+                      onClick={()=>setIsOpen(false)}
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
                     >
                       Profile
                     </Link>
                     <Link
+                      onClick={()=>setIsOpen(false)}
                       to="/whish"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
                     >
@@ -193,10 +214,21 @@ const Header = ({ keyword, setKeyword }) => {
                     </Link>
                     <Link
                       to="/premium"
+                      onClick={()=>setIsOpen(false)}
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
                     >
                       Premium
                     </Link>
+                    {user?.role && user?.role?.toLocaleLowerCase() === "admin" &&
+                    <a
+                      href="/admin"
+                      target="_blank"
+                      onClick={()=>setIsOpen(false)}
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
+                    >
+                      Admin
+                    </a>
+                    }
                     <button
                       onClick={() => {
                         setIsOpen(false);
@@ -273,7 +305,7 @@ const Header = ({ keyword, setKeyword }) => {
           >
             Free
           </Link>
-          <Link to="/premium" 
+          <Link to="/paid" 
             className="text-lg text-white hover:text-teal-500"
             onClick={toggleSidebar}
           >

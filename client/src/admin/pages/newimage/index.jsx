@@ -60,7 +60,7 @@ const AddImage = () => {
         })
         const response = await dispatch(addImageAsync(formData))
         if(response?.payload?.status === "success"){
-            setPost({ title : '', description : '', image : null, imageUrl : ''})
+            setPost({  title : '', description : '', image : null, imageType :'free', price:'', currency : "", imageUrl :''})
             toast.success('Image Upload Successfully')
         }else toast.error('Image is not uploaded!')
     }

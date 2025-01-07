@@ -18,6 +18,8 @@ import AddImage from "../admin/pages/newimage";
 import AdminImage from "../admin/pages/image";
 import EditImage from "../admin/pages/editimage/index.jsx";
 import Home from "../pages/home";
+import Free from "../pages/free/index.jsx";
+import Paid from "../pages/free/Paid.jsx";
 
 const router = createBrowserRouter([
 {
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
     {
         path: "/images",
         element: <Shop/>,
+    },
+    {
+        path : '/free',
+        element : <Free />
+    },
+    {
+        path : '/paid',
+        element : <Paid />
     },
     {
         path : "/login",
@@ -56,10 +66,6 @@ const router = createBrowserRouter([
         path : '/premium',
         element : <Premium />
     },
-    // {
-    //     path: "/upload-image",
-    //     element: <AddImage/>,
-    // },
     {
         path : '*',
         element : <NotFound />

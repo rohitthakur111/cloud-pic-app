@@ -30,16 +30,16 @@ const index = () => {
     },[])
 
 
-    // HANDLE CHAMNGE IMAGE TYPE
+    // HANDLE CHANGE IMAGE TYPE
     const handleSelect = (e)=>{ 
         const newValue = e.target.value;
-        setSearchParams((prevState)=>{
-            const newParams = new URLSearchParams(prevState);
-            newParams.set('type',newValue)
-            newParams.set('currentpage',1)
-            return newParams
-        })
+        // setSearchParams((prevState)=>{
+        //     const newParams = new URLSearchParams(prevState);
+        //     newParams.set('type',newValue)
+        //     return newParams
+        // })
         setPage(1)
+        setPaginations((prevState)=>({...prevState, type : newValue}))
     }
 
     const [images, setImages] = useState([])
@@ -53,10 +53,11 @@ const index = () => {
             if(response.status === "success"){
                 const {totalImages, totalPages,images } = response
                 setImages(images)
-                setPaginations(prevState=> ({...prevState, totalImages, totalPages}))
+                setPaginations(prevState=> ({...prevState, totalImages, totalPages }))
             }
         })()
     },[searchParams])
+
     const breadcrumbs = [
         {
             title : "Admin",
@@ -72,7 +73,8 @@ const index = () => {
         totalImages : 5,
         totalPages : 1,
         pageSize : Number(searchParams.get('pagesize')) || 5, 
-        currentPage : Number(searchParams.get('currentpage')) || 1
+        currentPage : Number(searchParams.get('currentpage')) || 1,
+        type : searchParams.get('type') || 'popular'
     })
 
     // set current page 
@@ -82,23 +84,27 @@ const index = () => {
     }
     const setPageSize = (pageSize)=> {
         if(pageSize === paginations.pageSize) return
-        setPaginations(prevState=>({...prevState, currentPage : 1, pageSize}))
+        setPaginations(prevState=>({...prevState,currentPage : 1, pageSize}))
     }
 
     // handle params when change param
     useEffect(()=>{
-        const {currentPage, pageSize } = paginations;
+        const {currentPage, pageSize, type } = paginations;
+        
         setSearchParams((prevState=>{
             const newParams = new URLSearchParams(prevState)
             newParams.set('pagesize',pageSize)
             newParams.set('currentpage',currentPage)
+            newParams.set('currentpage',currentPage)
+            newParams.set('type',type)
             return newParams
         }))
-    },[paginations])
+    },[paginations,searchParams])
+
 
   return (
     <div>
-        <div className='flex justify-between items-center border-b bg-sky-50 rounded p-2 text-gray-600'>
+        <div className='flex flex-col md:flex-row justify-between items-center border-b bg-sky-50 rounded p-2 text-gray-600'>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             <PageSize 
                 handleSelect={handleSelect} 
@@ -108,7 +114,7 @@ const index = () => {
             />
         </div>
         <div className='mt-4'>
-            <Table images={images} paginations={paginations}/>
+            <Table images={images} setImages={setImages} paginations={paginations}/>
         </div>
         <Paginations paginations={paginations} setPage={setPage}/>
     </div>

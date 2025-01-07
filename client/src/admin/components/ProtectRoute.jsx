@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getUserAsync, loginUser } from '../../feature/auth/authSlice'
+import React, {useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { getUserAsync } from '../../feature/auth/authSlice'
 import { Navigate } from 'react-router-dom'
 import Loading from './Loading'
 

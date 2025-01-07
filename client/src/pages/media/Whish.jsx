@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import ImageCard from '../../components/ImageCard'
 import { TfiGallery } from 'react-icons/tfi'
 import Breadcrumbs from '../../components/Breadcrumbs'
+import LoginProtect from '../../components/LoginProtect'
 
 const Whish = () => {
   const loadingState = useSelector(whishLoading)
@@ -21,7 +22,6 @@ const Whish = () => {
       return index >= 0;
     })
     setWhishImages(whishList)
-    console.log(whishList)
   }, [whish])
 
   // Breadcrums
@@ -61,4 +61,4 @@ const Whish = () => {
   )
 }
 
-export default Whish
+export default LoginProtect(Whish)

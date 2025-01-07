@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      colors : {
+        // 'primary' : rgb('55', '65','81' )
+      },
       keyframes: {
         'slide-right': {
           '0%': { transform: 'translateX(-100%)', opacity: 0 },
