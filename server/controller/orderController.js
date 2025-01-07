@@ -90,10 +90,11 @@ exports.makeOrder = async(req,res)=>{
 exports.getOrder = async(req,res)=>{
     const user = req.user;
     try{
-        const order = await Order.find({ user : user?._id}).select("image").populate("image")
+        const orders = await Order.find({ user : user?._id}).select("image").populate("image")
+        const orderFilter = orders.filter(order => order.image !== null)
         res.status(200).json({
            status : "success",
-           data : { order } 
+           data : { order : orderFilter } 
         })
     }catch(err){    
         res.status(500).json({
