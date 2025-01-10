@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
-import { useSelector } from 'react-redux'
-import { loginUser } from '../../feature/auth/authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginUser, logout } from '../../feature/auth/authSlice'
 import { CiUser } from 'react-icons/ci'
 import { RiLogoutCircleRFill } from 'react-icons/ri'
+import { Link, Navigate } from 'react-router-dom'
 
 const Header = () => {
   const admin = useSelector(loginUser)
+  const dispatch = useDispatch()
   return (
     <>
       <div className="navbar bg-base-100 w-full flex justify-end lg:px-32 py-4 border-b sticky top-0 z-30">
@@ -16,28 +18,36 @@ const Header = () => {
             {/* Avatar */}
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img
-                  alt="Admin Profile"
-                  src={admin.profilePicture}
-                  className="w-full h-full object-cover rounded-full"
-                />
+              {admin?.profilePicture ? (
+                      <img src={admin?.profilePicture} alt="User Avatar" className="rounded-full" />
+                    ) : (
+                      <p className="w-full h-full rounded-full text-2xl flex justify-center items-center">{admin?.userName?.charAt(0)}</p>
+                    )}
               </div>
             </div>
             {/* Dropdown Menu */}
             <ul
               tabIndex={0}
-              className="absolute w-32 right-0 lg:right-[-20] top-8 hidden group-hover:block bg-base-100 rounded  mt-3 p-2 shadow-lg transition-all ease-in-out duration-200 transform opacity-0 group-hover:opacity-100">
+              className="absolute w-32 right-[-30px] top-8 hidden group-hover:block bg-base-100 rounded  mt-3 p-2 shadow-lg transition-all ease-in-out duration-200 transform opacity-0 group-hover:opacity-100">
               <li className="hover:bg-gray-200 p-2 rounded">
-                <a className="flex items-center space-x-2">
+                <Link to="profile" className="flex items-center space-x-2">
                   <span><CiUser size={24}/></span>
                   <span>Profile</span>
-                </a>
+                </Link>
               </li>
               <li className="hover:bg-gray-200 p-2 rounded">
-                <a className="flex items-center space-x-2">
+                <button 
+                  className="flex items-center space-x-2" 
+                  onClick={()=> {
+                    localStorage.removeItem('token')
+                     dispatch(logout())
+                     retrun (<Navigate to="/login"/>)
+                    }
+                  }
+                >
                 <span><RiLogoutCircleRFill size={24}/></span>
                   <span>Logout</span>
-                </a>
+                </button>
               </li>
             </ul>
           </div>

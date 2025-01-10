@@ -5,14 +5,13 @@ import { Navigate } from 'react-router-dom'
 import Loading from './Loading'
 
 const ProtectRoute = (WrappedComponent) => {
-    
   return (props)=>{
     const [isAuth, seIsAuth] = useState(null)
     const dispatch = useDispatch()
     const getUser = async()=>{
         try{
             const response = await dispatch(getUserAsync())
-            if(response?.payload?.data?.user) return seIsAuth(true)
+              if(response?.payload?.data?.user?.role?.toLocaleLowerCase() === "admin") return seIsAuth(true)
             return seIsAuth(false) 
         }catch(err){
             seIsAuth(false)

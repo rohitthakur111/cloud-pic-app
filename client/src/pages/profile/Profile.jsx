@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { TbEdit } from 'react-icons/tb';
@@ -6,8 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import { loginLoading, loginUser, updateAccountAsync } from '../../feature/auth/authSlice';
-
+import LoginProtect from '../../components/LoginProtect';
+import Modal from './Modal'
 const Profile = () => {
+    const[modal,setModal] = useState(false)
+    const btnRef = useRef(null)
     const dispatch = useDispatch();
     const loggedUser = useSelector(loginUser);
     const updateLoading = useSelector(loginLoading);
@@ -91,11 +94,21 @@ const Profile = () => {
 
     return (
         <div className="section-container">
+            {modal && 
+                <Modal modal={modal} setModal={setModal} btnRef={btnRef}/>
+            }
             <div className="outlet-container container">
                 <div className="w-full">
                     {/* Header Section */}
-                    <div className="flex justify-between items-center bg-sky-50 p-4 border-b">
+                    <div className="flex flex-col md:flex-row justify-between items-center bg-sky-50 p-4 border-b">
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
+                        <button
+                            ref={btnRef} 
+                            className='flex items-center px-4 py-2 rounded-md text-white bg-red-400 hover:bg-red-500 transition-colors duration-300 font-medium'
+                            onClick={()=>setModal(!modal)}
+                        >
+                            Change Password
+                        </button>
                     </div>
 
                     {/* Form Section */}
@@ -124,11 +137,14 @@ const Profile = () => {
                                 {/* Profile Picture */}
                                 <div className="flex flex-col items-center">
                                     <div className="relative">
+                                        {user?.profilePicture ? 
                                         <img
-                                            src={user?.profilePicture || '/placeholder-avatar.png'}
+                                            src={user?.profilePicture}
                                             alt="Profile"
                                             className="w-32 h-32 rounded-full object-cover"
-                                        />
+                                        /> :
+                                        <span className="w-32 h-32 text-7xl rounded-full bg-teal-500 text-white flex items-center justify-center">{user?.userName?.charAt(0)}</span>
+                                        }
                                         <label className="absolute bottom-2 right-2 bg-teal-500 p-2 rounded-full text-white cursor-pointer">
                                             <TbEdit />
                                             <input type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
@@ -228,4 +244,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default LoginProtect(Profile);

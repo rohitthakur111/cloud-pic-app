@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors : {
-        // 'primary' : rgb('55', '65','81' )
+        customBlack: 'rgb(0 0 0)', 
       },
       keyframes: {
         'slide-right': {

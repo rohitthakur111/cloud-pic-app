@@ -13,7 +13,7 @@ const breadcrumbs = [
       link: "/",
     },
     {
-      title: "Free Images",
+      title: "Paid Images",
     },
   ]
 

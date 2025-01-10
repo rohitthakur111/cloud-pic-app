@@ -97,6 +97,10 @@ const router = createBrowserRouter([
             element : <UserList />
         },
         {
+            path : 'profile',
+            element : <Profile />
+        },
+        {
             path: "add-new",
             element: <AddImage/>,
         },

@@ -42,7 +42,7 @@ const Header = ({ keyword, setKeyword }) => {
 
   useEffect(() => {
     if (loginToken) localStorage.setItem("token", loginToken);
-    else localStorage.removeItem("token");
+    else localStorage.removeItem("token");  
   }, [loginToken]);
 
   useEffect(() => {
@@ -189,7 +189,7 @@ const Header = ({ keyword, setKeyword }) => {
                     {user?.profilePicture ? (
                       <img src={user?.profilePicture} alt="User Avatar" className="rounded-full" />
                     ) : (
-                      <span>{user?.userName?.charAt(0)}</span>
+                      <p className="w-full h-full rounded-full text-2xl flex justify-center items-center">{user?.userName?.charAt(0)}</p>
                     )}
                   </div>
                 </div>
@@ -327,11 +327,11 @@ const Header = ({ keyword, setKeyword }) => {
             <>
               <div className="mt-4 flex items-center space-x-4">
                 <div className="avatar">
-                  <div className="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center">
+                  <div className="w-12 h-12 text-2xl rounded-full bg-teal-500 text-white flex items-center justify-center">
                     {user?.profilePicture ? (
                       <img src={user.profilePicture} alt="User Avatar" className="rounded-full" />
                     ) : (
-                      <span>{user?.userName?.charAt(0)}</span>
+                      <p className="w-full h-full rounded-full flex justify-center items-center">{user?.userName?.charAt(0)}</p>
                     )}
                   </div>
                 </div>

@@ -60,3 +60,16 @@ export const updateAccount = async(user)=>{
     }
 }
 
+// UPDATE PASSWORD
+export const updatePassword = async(data)=>{
+    try{
+        const token = localStorage.getItem('token')
+        const response =  await Api.patch('/auth/change-password', data, { headers : {
+            'Authorization' : `Bearer ${token}`,
+            }
+        });
+        return response.data
+    }catch(err){
+        throw err.response?.data || err.message || "An error occurred";
+    }
+}
