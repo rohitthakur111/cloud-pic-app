@@ -4,10 +4,11 @@ const cors = require('cors')
 
 const NODE_PROD_ENV = process.env.NODE_PROD_ENV || false;
 
-const userRouter = require("./routes/authRoutes")
+const authRouter = require("./routes/authRoutes")
 const imageRouter = require("./routes/imageRoutes")
 const whishRouter = require("./routes/whishRoutes")
 const orderRouter = require("./routes/orderRoutes")
+const userRouter = require("./routes/userRoutes")
 
 const app = express()
 // Middleware
@@ -20,11 +21,12 @@ app.use(cors({
 }))
 
 // Rotes of api
-app.use('/api/cloud-pic/auth', userRouter)
+app.use('/api/cloud-pic/auth', authRouter)
 app.use('/api/cloud-pic/whish', whishRouter)
 app.use('/api/cloud-pic/images', imageRouter)
 app.use('/api/cloud-pic/checkout', orderRouter)
 app.use('/api/cloud-pic/images', imageRouter)
+app.use('/api/cloud-pic/users', userRouter)
 
 
 app.get('/', (req,res)=>{

@@ -6,6 +6,8 @@ const cloudinary = require('cloudinary').v2;
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(process.env.CLIENT_ID)
 
+const encodePassword = (password)=> bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
 const  generateRandomPassword=(length) =>{
     const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:',.<>?";
     let password = "";
@@ -187,6 +189,36 @@ exports.updateMe = async (req,res)=>{
                 if (error) console.log('image deleted')
             })
         }
+    }catch(err){
+        res.status(500).json({
+            status : "fail",
+            error : err.message
+        })
+    }
+}
+
+// update password
+exports.updatePassword = async (req,res)=>{
+    const userId = req.user.id;
+    const {currentPassword, newPassword, confirmPassword} = req.body
+    if(!currentPassword || !newPassword || !confirmPassword)
+        return res.status(400).json({
+           status : 'fail',
+           error: 'All fields are required: current password, new password, and confirm password.'
+        })
+    if(newPassword !== confirmPassword) 
+        return res.status(400).json({ status : "error", error : "new password does not match with confirm password"})         
+    try{
+        const user = await User.findById(userId).select("+password")
+        if(!comparePassword(currentPassword, user.password))
+            return res.status(400).json({ status : "error", error : "The current password is incorrect"})      
+        
+        const updatedUser = await User.findByIdAndUpdate(userId, { password : encodePassword(newPassword) }, { new : true } )
+        const token = signToken(updatedUser)
+       return res.status(200).json({
+        status : "success",
+        token 
+       })
     }catch(err){
         res.status(500).json({
             status : "fail",
