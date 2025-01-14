@@ -56,7 +56,7 @@ exports.register = async(req,res)=>{
             return res.status(400).json({
                 status : "fail",
                 error : 'Email address is already exists!'
-            })
+             })
         // create user 
         const salt = bcrypt.genSaltSync(10); 
         const hashPassword = bcrypt.hashSync(password, salt);

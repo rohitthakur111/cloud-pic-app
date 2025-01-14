@@ -8,7 +8,10 @@ const authRouter = require("./routes/authRoutes")
 const imageRouter = require("./routes/imageRoutes")
 const whishRouter = require("./routes/whishRoutes")
 const orderRouter = require("./routes/orderRoutes")
-const userRouter = require("./routes/userRoutes")
+const userRouter = require("./routes/userRoutes");
+const contactRouter = require("./routes/contactRoutes");
+
+const sendEmail = require("./email/mail");
 
 const app = express()
 // Middleware
@@ -27,6 +30,7 @@ app.use('/api/cloud-pic/images', imageRouter)
 app.use('/api/cloud-pic/checkout', orderRouter)
 app.use('/api/cloud-pic/images', imageRouter)
 app.use('/api/cloud-pic/users', userRouter)
+app.use('/api/cloud-pic/contact', contactRouter)
 
 
 app.get('/', (req,res)=>{
@@ -36,6 +40,16 @@ app.get('/', (req,res)=>{
 app.get('/env', (req,res)=>{
     res.json(process.env.CLOUDINARY_CLOUD_NAME)
 })
+
+// Example usage
+// sendEmail("John Doe", "giboy54197@nalwan.com", "Hello, this is your custom message", "Subject")
+//     .then(result => {
+//         console.log("Email sent successfully:", result);
+//     })
+//     .catch(error => {
+//         console.error("Error sending email:", error);
+//     });
+
 
 module.exports = { app };
  
