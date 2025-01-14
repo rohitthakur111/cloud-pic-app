@@ -120,11 +120,11 @@ const Profile = () => {
                                 className={`px-6 py-2 rounded text-white font-medium flex items-center gap-2 transition ${isChanged && !updateLoading ? 'bg-teal-500 hover:bg-teal-600' : 'bg-gray-400 cursor-not-allowed'
                                     }`}
                             >
+                                  Save Changes
                                 {updateLoading ? (
                                     <AiOutlineLoading3Quarters className="animate-spin" />
                                 ) : (
                                     <>
-                                        Save Changes
                                         <FaArrowRightLong />
                                     </>
                                 )}

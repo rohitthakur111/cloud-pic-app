@@ -151,7 +151,7 @@ const authSlice = createSlice({
             .addCase(updateAccountAsync.fulfilled, (state, action) => {
                 state.loading = false
                 state.error = null
-                state.user = action.payload?.data?.token
+                state.user = action.payload?.data?.user
 
             })
 
