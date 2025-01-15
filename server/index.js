@@ -38,17 +38,10 @@ app.get('/', (req,res)=>{
 })
 
 app.get('/env', (req,res)=>{
-    res.json(process.env.CLOUDINARY_CLOUD_NAME)
+    res.json(process.env.USER_GMAIL)
 })
 
-// Example usage
-// sendEmail("John Doe", "giboy54197@nalwan.com", "Hello, this is your custom message", "Subject")
-//     .then(result => {
-//         console.log("Email sent successfully:", result);
-//     })
-//     .catch(error => {
-//         console.error("Error sending email:", error);
-//     });
+
 
 
 module.exports = { app };
