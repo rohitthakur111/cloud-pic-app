@@ -63,7 +63,7 @@ const ContactUs = () => {
         try {
             const response  = await addConatctQuery(payload); 
             if(response?.status == "success"){
-                toast.success(response?.message || 'Your message sent successfully');
+                toast.success('Your message sent successfully');
             }
             setPayload({ name: "", email: "", message: "" }); 
             setError({ name: "", email: "", message: "" });

@@ -73,3 +73,22 @@ export const updatePassword = async(data)=>{
         throw err.response?.data || err.message || "An error occurred";
     }
 }
+
+// Reset Password
+export const forgotPassword = async(email)=>{
+    try{
+        const response =  await Api.post('/auth/forgot-password', { email });
+        return response.data
+    }catch(err){
+        throw err.response?.data || err.message || "An error occurred";
+    }
+}
+
+export const resetPassword = async(payload)=>{
+    try{
+        const response =  await Api.post('/auth/reset-password', payload);
+        return response.data
+    }catch(err){
+        throw err.response?.data || err.message || "An error occurred";
+    }
+}

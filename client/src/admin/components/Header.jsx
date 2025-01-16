@@ -5,10 +5,18 @@ import { loginUser, logout } from '../../feature/auth/authSlice'
 import { CiUser } from 'react-icons/ci'
 import { RiLogoutCircleRFill } from 'react-icons/ri'
 import { Link, Navigate } from 'react-router-dom'
+import { getUsersAsync } from '../../feature/users/userSlice'
 
 const Header = () => {
   const admin = useSelector(loginUser)
   const dispatch = useDispatch()
+  
+  // run function on load like get users
+  useEffect(()=>{
+    (async()=>{
+       await dispatch(getUsersAsync())
+    })()
+  },[])
   return (
     <>
       <div className="navbar bg-base-100 w-full flex justify-end lg:px-32 py-4 border-b sticky top-0 z-30">

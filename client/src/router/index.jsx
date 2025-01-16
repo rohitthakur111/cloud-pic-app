@@ -20,6 +20,8 @@ import EditImage from "../admin/pages/editimage/index.jsx";
 import Home from "../pages/home";
 import Free from "../pages/free/index.jsx";
 import Paid from "../pages/free/Paid.jsx";
+import PasswordReset from "../pages/password/index.jsx";
+import SetNewPassword from "../pages/password/SetNewPassword.jsx";
 
 const router = createBrowserRouter([
 {
@@ -49,6 +51,14 @@ const router = createBrowserRouter([
     {
         path : "/register",
         element : <PrivateRoute element={<Register /> }> </PrivateRoute>
+    },
+    {
+        path : "/forgot-password",
+        element : <PasswordReset />
+    },
+    {
+        path : "/new-password",
+        element : <SetNewPassword />
     },
     {
         path: "/image/:id",

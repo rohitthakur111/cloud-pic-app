@@ -5,7 +5,7 @@ import { getUserAsync, loginAsync, loginLoading, registerAsync } from '../featur
 import toast from 'react-hot-toast';
 import GoogleLoginBtn from './GoogleLoginBtn';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 const Form = ({login}) => {
     const userLoading = useSelector(loginLoading)
@@ -136,9 +136,13 @@ const Form = ({login}) => {
             </button> */}
             <GoogleLoginBtn />
 
-            <button type="button" className='flex ml-auto mt-2 text-sm font-semibold text-sky-400'>
+            <Link 
+                to="/forgot-password"
+                type="button" 
+                className='flex justify-end ml-auto mt-2 text-sm font-semibold text-sky-400'
+            >
                 Forgot Password?
-            </button>
+            </Link>
             <button 
                 className={`w-full flex justify-center items-center mt-4 p-3  text-base uppercase font-semibold rounded-md text-white  transition-colors duration-500 ease-in-out border border-red-200 border-opacity-40  ${userLoading ? 'bg-gray-400' : 'bg-error  hover:bg-teal-500'}`}
                 disabled={userLoading}
