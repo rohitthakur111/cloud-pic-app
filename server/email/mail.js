@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const config = require("../config");
-const getHtmlMessage = require("./contactUs");
 
 const OAuth2 = google.auth.OAuth2;
 
@@ -58,7 +57,7 @@ const sendEmail = async (name, receiver, message, subject = "No Subject", templa
             from: `Pic Nest <${config.user}>`,
             to: receiver,
             subject: finalSubject,
-            html: getHtmlMessage(name, finalMessage),
+            html: template(name, finalMessage),
         };
 
         // Send email and return the result as a promise

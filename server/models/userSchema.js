@@ -56,7 +56,11 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'editor', 'admin'], 
         default: 'user', 
     },
+    resetToken :  String,
+    resetTokenExpiration : Date
 })
+
+userSchema.index({ resetToken: 1 });
 
 const User = mongoose.model('users', userSchema)
 

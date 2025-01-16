@@ -1,4 +1,4 @@
-module.exports = (name,  resetLink) => {
+module.exports = (name, resetLink) => {
     return `
         <html>
             <head>
@@ -56,12 +56,13 @@ module.exports = (name,  resetLink) => {
                     <div class="email-body">
                         <p>Hello ${name},</p>
                         <p>We received a request to reset your password. If you made this request, please click the link below to reset your password:</p>
-                        <p><a href="${resetLink}" class="cta-button">Reset Your Password</a></p>
+                        <p><a href="${resetLink}" class="cta-">Reset Your Password</a></p>
+                        <p><em>Please note: This link will expire in 10 minutes.</em></p>
                         <p>If you did not request a password reset, please ignore this email, and your password will remain unchanged.</p>
                         <p>If you have any questions or need further assistance, feel free to reply to this email or contact our support team.</p>
                         <p>Best regards,</p>
-                        <p><strong>Your Company Name</strong></p>
-                        <p><a href="https://yourwebsite.com">Visit our website</a> | <a href="#">Unsubscribe</a></p>
+                        <p><strong>Pic Nest</strong></p>
+                        <p><a href="https://cloud-pic-app.vercel.app">Visit our website</a> | <a href="#">Unsubscribe</a></p>
                     </div>
                 </div>
             </body>

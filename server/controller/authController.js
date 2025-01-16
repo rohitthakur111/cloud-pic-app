@@ -4,7 +4,15 @@ const bcrypt = require('bcryptjs');
 const secret = "secret"
 const cloudinary = require('cloudinary').v2;
 const { OAuth2Client } = require('google-auth-library')
+const crypto = require("crypto");
+const sendEmail = require("../email/mail");
 const client = new OAuth2Client(process.env.CLIENT_ID)
+const resetPassword = require("../email/resetEmail");
+const resetEmail = require("../email/resetEmail");
+const registerEmail = require("../email/registerEmail");
+
+const NODE_PROD_ENV = process.env.NODE_PROD_ENV || false;
+const CLIENT_URL = NODE_PROD_ENV ? "https://cloud-pic-app.vercel.app" : "http://localhost:5173";
 
 const encodePassword = (password)=> bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
@@ -65,12 +73,17 @@ exports.register = async(req,res)=>{
         const token = signToken(user)
 
         user = await User.findById(user?._id)
-        return res.status(201).json({
+        res.status(201).json({
             status : "success",
             data : {token, user}
         })
-        
-
+        try{
+            const subject ="Registration Successful - Welcome to Pic Nest!"
+            const message = `User Name : ${userName} <br>Email : ${email}`
+            await sendEmail(userName, email, message, subject, registerEmail)
+        }catch(err){
+            console.log(err)
+        }
     }catch(err){
         res.status(500).json({
             status : "fail",
@@ -226,3 +239,106 @@ exports.updatePassword = async (req,res)=>{
         })
     }
 }
+
+// Reset Password
+exports.forgotPassword = async(req,res)=>{
+    const { email } = req.body;
+    if (!email || !email.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)) {
+        return res.status(400).json({
+            status : "fail",
+            error : 'Invalid email address'
+        });
+    }
+    try{
+        // Check if the email exists in the database
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
+                status : "fail",
+                error : 'No account found with that email'
+            });
+        }
+        const token = crypto.randomBytes(32).toString('hex')
+        const expiration = Date.now() + 600000 ; 
+        user.resetToken = token;
+        user.resetTokenExpiration = expiration;
+        await user.save();
+        const message = `${CLIENT_URL}/new-password?resetToken=${token}&expiration=${expiration}`
+        const subject = "Password Reset Request"
+        try{
+            await sendEmail(user.userName, email, message, subject, resetEmail)
+            return res.status(200).json({
+                status : "success",
+                message : "Password reset link sent to you email please check"
+            })
+        }catch(err){
+            return res.status(400).json({
+                status : "fail",
+                error : err.message
+            });
+        }
+    }catch(err){
+        return res.status(400).json({
+            status : "fail",
+            error : err.message
+        });
+    }
+
+}
+
+exports.resetPassword = async (req, res) => {
+    const { resetToken, newPassword } = req.body;
+
+    // Both reset token and new password are required
+    if (!resetToken || !newPassword) {
+        return res.status(400).json({
+            status: "fail",
+            error: "Reset token and new password are required."
+        });
+    }
+
+    try {
+        // Find the user by the reset token
+        const user = await User.findOne({ resetToken });
+        
+        // If no user is found or the reset token does not exist
+        if (!user) {
+            return res.status(400).json({
+                status: "fail",
+                error: "Invalid or expired reset token."
+            });
+        }
+
+        // check if expired
+        if (new Date() > user.resetTokenExpiration) {
+            user.resetToken = undefined
+            user.resetTokenExpiration = undefined
+            await user.save()
+
+            return res.status(400).json({
+                status: "fail",
+                error: "Reset token has expired."
+            });
+        }
+
+        // delete it when set new password
+        user.resetToken = undefined
+        user.resetTokenExpiration = undefined
+
+        user.password = encodePassword(newPassword); 
+
+        await user.save();
+
+        return res.status(200).json({
+            status: "success",
+            message: "Password has been successfully reset."
+        });
+        
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            status: "error",
+            error: "An error occurred while processing your request. Please try again later."
+        });
+    }
+};
