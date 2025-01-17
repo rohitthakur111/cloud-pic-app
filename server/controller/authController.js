@@ -127,8 +127,8 @@ exports.login = async(req,res)=>{
 exports.getUser = async(req,res)=>{
     const user = req.user;
     res.status(200).json({
-        status : "success",
-        data : {user}
+        status : "successed",
+        data : { user }
     })
 }
 

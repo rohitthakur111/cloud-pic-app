@@ -14,6 +14,8 @@ exports.protect = async(req,res,next)=>{
         var decoded = jwt.verify(token, secret);
         if(!decoded) return res.status(400).json({ status : 'fail', error : 'Login again!'}) 
         const user = await User.findById(decoded?.data.user)
+        if(!user) return res.status(400).json({ status : 'fail', error : 'Login again!'}) 
+        
         req.user = user
         next()
     }catch(err){

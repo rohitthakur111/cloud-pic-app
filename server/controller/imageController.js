@@ -244,11 +244,11 @@ exports.getImagesList = async(req,res)=>{
     // const type = req.headers.type || 'all';
     try{
         const parseUrl = url.parse(req.url, true)
-        let {type, pagesize = 5,curentpage = 1} = parseUrl.query
+        let {type, pagesize = 5,currentpage = 1} = parseUrl.query
 
         pagesize = pagesize >100 && pagesize<0 ? 5 : Number(pagesize)
-        curentpage = curentpage < 1 ? 1 : Number(curentpage)
-        const skip = (curentpage - 1) * pagesize;
+        currentpage = currentpage < 1 ? 1 : Number(currentpage)
+        const skip = (currentpage - 1) * pagesize;
 
         let matchStage = {};
         if (type === 'free') {
@@ -309,11 +309,11 @@ exports.getImagesList = async(req,res)=>{
                 $limit: pagesize,
             }
         )
-        if (curentpage > totalPages) {
+        if (currentpage > totalPages) {
             return res.status(200).json({
                 status: 'success',
                 message: 'Page number exceeds total pages',
-                currentPage: curentpage,
+                currentPage: currentpage,
                 totalPages,
                 totalImages,
                 images: [],
