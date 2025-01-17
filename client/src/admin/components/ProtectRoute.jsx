@@ -1,6 +1,6 @@
-import React, {useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { getUserAsync } from '../../feature/auth/authSlice'
+import React, {useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { authToken, getUserAsync } from '../../feature/auth/authSlice'
 import { Navigate } from 'react-router-dom'
 import Loading from './Loading'
 
@@ -8,6 +8,7 @@ const ProtectRoute = (WrappedComponent) => {
   return (props)=>{
     const [isAuth, seIsAuth] = useState(null)
     const dispatch = useDispatch()
+    const token = useSelector(authToken)
     const getUser = async()=>{
         try{
             const response = await dispatch(getUserAsync())
@@ -17,7 +18,12 @@ const ProtectRoute = (WrappedComponent) => {
             seIsAuth(false)
         }
     }
-    getUser()
+    useEffect(()=>{
+      (async()=>{
+        await getUser()
+      })()
+    },[token])
+    
     if (isAuth === null ) return <Loading />
     return isAuth ? <WrappedComponent {...props}/> : <Navigate to="/login"/> 
   }

@@ -6,6 +6,7 @@ import Table from './Table.jsx'
 import Paginations from '../../../components/Paginations.jsx'
 import PageSize from './PageSize.jsx'   
 import PopupDialog from '../../components/PopupDialog.jsx'
+import Loading from '../../components/Loading.jsx'
  // Type of images
  const options = [
     { title : "All", value : 'all'},
@@ -17,6 +18,7 @@ import PopupDialog from '../../components/PopupDialog.jsx'
 const index = () => {
    
     const [searchParams, setSearchParams] = useSearchParams();
+    const [loading, setLoading] = useState(false)
 
     // declare initials query param
     const query  = {
@@ -43,17 +45,27 @@ const index = () => {
     }
 
     const [images, setImages] = useState([])
+
     useEffect(()=>{
         (async ()=>{
+            setLoading(true)
             const type = searchParams.get('type')
             const pageSize = searchParams.get('pagesize')
             const currentPage = searchParams.get('currentpage')
-            const query = `type=${type}&pagesize=${pageSize}&curentpage=${currentPage}`
-            const response = await getImageList(query)
-            if(response.status === "success"){
-                const {totalImages, totalPages,images } = response
-                setImages(images)
-                setPaginations(prevState=> ({...prevState, totalImages, totalPages }))
+            const query = `type=${type}&pagesize=${pageSize}&currentpage=${currentPage}`
+            try{
+                const response = await getImageList(query)
+                if(response.status === "success"){
+                    const {totalImages, totalPages,images } = response
+                    setImages(images)
+                    setPaginations(prevState=> ({...prevState, totalImages, totalPages }))
+                }
+            }catch(err){
+                console.log(err)
+            }
+            
+            finally{
+                setLoading(false)
             }
         })()
     },[searchParams])
@@ -101,7 +113,7 @@ const index = () => {
         }))
     },[paginations,searchParams])
 
-
+    if(loading === true) return <Loading />
   return (
     <div>
         <div className='flex flex-col md:flex-row justify-between items-center border-b bg-sky-50 rounded p-2 text-gray-600'>

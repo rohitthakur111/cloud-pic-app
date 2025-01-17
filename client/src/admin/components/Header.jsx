@@ -46,12 +46,7 @@ const Header = () => {
               <li className="hover:bg-gray-200 p-2 rounded">
                 <button 
                   className="flex items-center space-x-2" 
-                  onClick={()=> {
-                    localStorage.removeItem('token')
-                     dispatch(logout())
-                     retrun (<Navigate to="/login"/>)
-                    }
-                  }
+                  onClick={()=>dispatch(logout())}
                 >
                 <span><RiLogoutCircleRFill size={24}/></span>
                   <span>Logout</span>

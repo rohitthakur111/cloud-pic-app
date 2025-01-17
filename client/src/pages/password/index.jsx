@@ -31,8 +31,8 @@ const PasswordReset = () => {
 
     const handldeSubmit = async (e) => {
         e.preventDefault()
-        setLoading(true)
         if(!validateEmail()) return
+        setLoading(true)
         try{
             const response = await forgotPassword(email)
            if(response.status === "success"){

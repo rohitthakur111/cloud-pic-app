@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import Breadcrumbs from '../../../components/Breadcrumbs'
 import Table from './Table.jsx'
-import { getUsers } from '../../../feature/users/service.jsx'
 import { useSelector } from 'react-redux'
 import { users } from '../../../feature/users/userSlice.jsx'
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { RiCloseLine, RiDeleteBin6Line } from 'react-icons/ri';
 
-const PopupDialog = ({ message, title, onConfirm, isOpen,setIsOpen,deleteRef,loading=false,setDeleteLoading }) => {
+const PopupDialog = ({ icon=false, message, title, onConfirm, isOpen,setIsOpen,deleteRef,loading=false,setDeleteLoading }) => {
   
   const popUp = useRef(null)
    
@@ -41,7 +41,11 @@ const PopupDialog = ({ message, title, onConfirm, isOpen,setIsOpen,deleteRef,loa
         <div className="px-6 py-4">
           <div className="flex items-center justify-center mb-4">
             <div className="bg-red-200 p-3 text-red-500 rounded-full text-2xl">
+              {icon ? 
+              icon :
               <RiDeleteBin6Line />
+              } 
+              
             </div>
           </div>
           <h2 className="text-xl font-semibold text-gray-800 text-center mb-2">Are you sure?</h2>

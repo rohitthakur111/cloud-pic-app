@@ -11,10 +11,14 @@ const AdminLayout = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const closeSidebar = ()=>{
+    if(!isSidebarOpen) return
+    setIsSidebarOpen(false)
+  }
   return (
     <div className="flex min-h-screen bg-slate-100">
       {/* Sidebar */}
-      <AdminSideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <AdminSideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} closeSidebar={closeSidebar}/>
 
       {/* Main content */}
       <div
