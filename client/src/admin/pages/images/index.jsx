@@ -5,8 +5,6 @@ import { useSearchParams } from 'react-router-dom'
 import Table from './Table.jsx'
 import Paginations from '../../../components/Paginations.jsx'
 import PageSize from './PageSize.jsx'   
-import PopupDialog from '../../components/PopupDialog.jsx'
-import Loading from '../../components/Loading.jsx'
  // Type of images
  const options = [
     { title : "All", value : 'all'},
@@ -18,7 +16,6 @@ import Loading from '../../components/Loading.jsx'
 const index = () => {
    
     const [searchParams, setSearchParams] = useSearchParams();
-    const [loading, setLoading] = useState(false)
 
     // declare initials query param
     const query  = {
@@ -48,7 +45,6 @@ const index = () => {
 
     useEffect(()=>{
         (async ()=>{
-            setLoading(true)
             const type = searchParams.get('type')
             const pageSize = searchParams.get('pagesize')
             const currentPage = searchParams.get('currentpage')
@@ -62,10 +58,6 @@ const index = () => {
                 }
             }catch(err){
                 console.log(err)
-            }
-            
-            finally{
-                setLoading(false)
             }
         })()
     },[searchParams])
@@ -113,7 +105,6 @@ const index = () => {
         }))
     },[paginations,searchParams])
 
-    if(loading === true) return <Loading />
   return (
     <div>
         <div className='flex flex-col md:flex-row justify-between items-center border-b bg-sky-50 rounded p-2 text-gray-600'>
